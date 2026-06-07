@@ -8,6 +8,7 @@ export type Event = {
   ends_at: string | null
   is_free: boolean
   price_php: number | null
+  image_url: string | null
   created_at: string
   updated_at: string
 }

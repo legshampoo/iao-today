@@ -5,6 +5,9 @@ import type { Event } from '@/lib/types/event'
 
 export default async function Home() {
   const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const { data: events, error } = await supabase
     .from('events')
@@ -41,7 +44,7 @@ export default async function Home() {
           <ul className="flex flex-col gap-4">
             {(events as Event[]).map((event) => (
               <li key={event.id}>
-                <EventCard event={event} />
+                <EventCard event={event} isOwner={user?.id === event.user_id} />
               </li>
             ))}
           </ul>

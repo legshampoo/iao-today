@@ -1,11 +1,18 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
+import {
+  deleteEventImage,
+  uploadEventImage,
+  validateEventImage,
+  validateEventImageRequired,
+} from '@/lib/storage/event-image'
 import type { Event } from '@/lib/types/event'
 import {
   eventFormSchema,
@@ -22,6 +29,10 @@ type EventFormProps = {
 export function EventForm({ mode, event }: EventFormProps) {
   const router = useRouter()
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [removeImage, setRemoveImage] = useState(false)
+  const [imageError, setImageError] = useState<string | null>(null)
 
   const {
     register,
@@ -30,18 +41,93 @@ export function EventForm({ mode, event }: EventFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<EventFormValues>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: event ? eventToFormValues(event) : {
-      title: '',
-      description: '',
-      location: '',
-      starts_at: '',
-      ends_at: '',
-      is_free: false,
-      price_php: '',
-    },
+    defaultValues: event
+      ? eventToFormValues(event)
+      : {
+          title: '',
+          description: '',
+          location: '',
+          starts_at: '',
+          ends_at: '',
+          is_free: false,
+          price_php: '',
+        },
   })
 
   const isFree = watch('is_free')
+
+  useEffect(() => {
+    if (!imageFile) {
+      setImagePreview(null)
+      return
+    }
+
+    const previewUrl = URL.createObjectURL(imageFile)
+    setImagePreview(previewUrl)
+
+    return () => {
+      URL.revokeObjectURL(previewUrl)
+    }
+  }, [imageFile])
+
+  function handleImageChange(file: File | null) {
+    setImageError(null)
+    setRemoveImage(false)
+
+    if (!file) {
+      setImageFile(null)
+      return
+    }
+
+    const validationError = validateEventImage(file)
+
+    if (validationError) {
+      setImageError(validationError)
+      setImageFile(null)
+      return
+    }
+
+    setImageFile(file)
+  }
+
+  async function syncEventImage(
+    supabase: ReturnType<typeof createClient>,
+    userId: string,
+    eventId: string,
+    previousImageUrl: string | null | undefined
+  ) {
+    if (imageFile) {
+      const imageUrl = await uploadEventImage(supabase, userId, eventId, imageFile)
+
+      if (previousImageUrl && previousImageUrl !== imageUrl) {
+        await deleteEventImage(supabase, previousImageUrl)
+      }
+
+      const { error } = await supabase
+        .from('events')
+        .update({ image_url: imageUrl })
+        .eq('id', eventId)
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      return
+    }
+
+    if (removeImage && previousImageUrl) {
+      await deleteEventImage(supabase, previousImageUrl)
+
+      const { error } = await supabase
+        .from('events')
+        .update({ image_url: null })
+        .eq('id', eventId)
+
+      if (error) {
+        throw new Error(error.message)
+      }
+    }
+  }
 
   async function onSubmit(values: EventFormValues) {
     setSubmitError(null)
@@ -56,29 +142,55 @@ export function EventForm({ mode, event }: EventFormProps) {
       return
     }
 
+    const imageRequiredError = validateEventImageRequired(
+      imageFile,
+      event?.image_url,
+      removeImage
+    )
+
+    if (imageRequiredError) {
+      setImageError(imageRequiredError)
+      return
+    }
+
     const payload = formValuesToEventPayload(values, user.id)
 
-    if (mode === 'create') {
-      const { error } = await supabase.from('events').insert(payload)
+    try {
+      if (mode === 'create') {
+        const { data: createdEvent, error } = await supabase
+          .from('events')
+          .insert(payload)
+          .select('id')
+          .single()
+
+        if (error) {
+          setSubmitError(error.message)
+          return
+        }
+
+        await syncEventImage(supabase, user.id, createdEvent.id, null)
+
+        router.push('/dashboard')
+        router.refresh()
+        return
+      }
+
+      if (!event) return
+
+      const { error } = await supabase.from('events').update(payload).eq('id', event.id)
+
       if (error) {
         setSubmitError(error.message)
         return
       }
+
+      await syncEventImage(supabase, user.id, event.id, event.image_url)
+
       router.push('/dashboard')
       router.refresh()
-      return
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Could not save image.')
     }
-
-    if (!event) return
-
-    const { error } = await supabase.from('events').update(payload).eq('id', event.id)
-    if (error) {
-      setSubmitError(error.message)
-      return
-    }
-
-    router.push('/dashboard')
-    router.refresh()
   }
 
   async function handleDelete() {
@@ -87,6 +199,11 @@ export function EventForm({ mode, event }: EventFormProps) {
 
     setSubmitError(null)
     const supabase = createClient()
+
+    if (event.image_url) {
+      await deleteEventImage(supabase, event.image_url)
+    }
+
     const { error } = await supabase.from('events').delete().eq('id', event.id)
 
     if (error) {
@@ -97,6 +214,9 @@ export function EventForm({ mode, event }: EventFormProps) {
     router.push('/dashboard')
     router.refresh()
   }
+
+  const currentImageUrl =
+    imagePreview ?? (!removeImage ? event?.image_url ?? null : null)
 
   const inputClass =
     'mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500'
@@ -132,6 +252,49 @@ export function EventForm({ mode, event }: EventFormProps) {
         </label>
         <input id="location" type="text" className={inputClass} {...register('location')} />
         {errors.location && <p className={errorClass}>{errors.location.message}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="image" className={labelClass}>
+          Image
+        </label>
+        {currentImageUrl && (
+          <div className="relative mt-2 aspect-[16/9] w-full max-w-md overflow-hidden rounded-lg bg-zinc-100">
+            <Image
+              src={currentImageUrl}
+              alt="Event preview"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 448px"
+              unoptimized={Boolean(imagePreview)}
+            />
+          </div>
+        )}
+        <input
+          id="image"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          required={mode === 'create'}
+          className="mt-2 block w-full text-sm text-zinc-600 file:mr-3 file:rounded-lg file:border-0 file:bg-zinc-100 file:px-3 file:py-2 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200"
+          onChange={(e) => handleImageChange(e.target.files?.[0] ?? null)}
+        />
+        <p className="mt-1 text-xs text-zinc-500">
+          16:9 ratio is ideal (e.g. 1600 × 900 px). JPEG, PNG, WebP, or GIF up to 1 MB.
+        </p>
+        {imageError && <p className={errorClass}>{imageError}</p>}
+        {mode === 'edit' && currentImageUrl && (
+          <button
+            type="button"
+            onClick={() => {
+              setImageFile(null)
+              setRemoveImage(true)
+              setImageError(null)
+            }}
+            className="mt-2 text-sm font-medium text-red-600 transition-colors hover:text-red-800"
+          >
+            Replace image
+          </button>
+        )}
       </div>
 
       <div>
