@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Siargao Events",
-  description: "Upcoming events in Siargao, Philippines",
+  title: 'IAO Today',
+  description: "What's happening in Siargao, Philippines",
 };
 
 export default function RootLayout({

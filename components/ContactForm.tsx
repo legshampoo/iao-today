@@ -2,16 +2,15 @@
 
 import { useState, type FormEvent } from 'react'
 
-const CONTACT_EMAIL = 'hello@siargaotoday.com'
-
 export function ContactForm() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError(null)
 
@@ -20,13 +19,32 @@ export function ContactForm() {
       return
     }
 
-    const subject = encodeURIComponent(`Contact from ${name.trim()}`)
-    const body = encodeURIComponent(
-      `${message.trim()}\n\n— ${name.trim()} (${email.trim()})`
-    )
+    setIsSubmitting(true)
 
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
-    setSubmitted(true)
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+        }),
+      })
+
+      const data = (await response.json()) as { error?: string }
+
+      if (!response.ok) {
+        setError(data.error ?? 'Could not send message. Please try again.')
+        return
+      }
+
+      setSubmitted(true)
+    } catch {
+      setError('Could not send message. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const inputClass =
@@ -36,12 +54,8 @@ export function ContactForm() {
   if (submitted) {
     return (
       <p className="rounded-xl border border-zinc-200 bg-zinc-50 px-6 py-8 text-sm text-zinc-600">
-        Thanks for reaching out. Your email app should open so you can send your
-        message. If it didn&apos;t, write to{' '}
-        <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-zinc-900 underline">
-          {CONTACT_EMAIL}
-        </a>
-        .
+        Thanks for reaching out. We&apos;ve received your message and will get back
+        to you soon.
       </p>
     )
   }
@@ -58,6 +72,7 @@ export function ContactForm() {
           className={inputClass}
           value={name}
           onChange={(e) => setName(e.target.value)}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -71,6 +86,7 @@ export function ContactForm() {
           className={inputClass}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -84,6 +100,7 @@ export function ContactForm() {
           className={inputClass}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -95,9 +112,10 @@ export function ContactForm() {
 
       <button
         type="submit"
-        className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+        disabled={isSubmitting}
+        className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
       >
-        Send message
+        {isSubmitting ? 'Sending…' : 'Send message'}
       </button>
     </form>
   )

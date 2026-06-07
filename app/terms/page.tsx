@@ -14,7 +14,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-base font-semibold text-zinc-900">1. Acceptance</h2>
             <p>
-              By using Siargao Events, you agree to these Terms of Use. If you do not
+              By using IAO Today, you agree to these Terms of Use. If you do not
               agree, please do not use the site.
             </p>
           </section>
@@ -22,7 +22,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-base font-semibold text-zinc-900">2. Use of the service</h2>
             <p>
-              Siargao Events provides a platform for listing and discovering events in
+              IAO Today provides a platform for listing and discovering events in
               Siargao. You may browse events without an account. To create or manage
               events, you must register and keep your account secure.
             </p>
@@ -43,7 +43,7 @@ export default function TermsPage() {
             <p>
               We do not organize, host, or verify events listed on the site. Attendance
               and transactions between attendees and organizers are solely between those
-              parties. Siargao Events is not liable for cancellations, changes, injuries,
+              parties. IAO Today is not liable for cancellations, changes, injuries,
               or disputes arising from any event.
             </p>
           </section>

@@ -37,7 +37,7 @@ export function Footer() {
       </div>
       <div className="border-t border-zinc-200">
         <p className="mx-auto max-w-3xl px-4 py-4 text-center text-xs text-zinc-500">
-          © {new Date().getFullYear()} Siargao Events
+          © {new Date().getFullYear()} IAO Today
         </p>
       </div>
     </footer>
