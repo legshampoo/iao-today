@@ -1,10 +1,11 @@
+import { DefaultPageShell } from '@/components/DefaultPageShell'
 import { Header } from '@/components/Header'
 
 export default function TermsPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <DefaultPageShell>
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
           Terms of Use
         </h1>
@@ -76,7 +77,7 @@ export default function TermsPage() {
             </p>
           </section>
         </div>
-      </main>
+      </DefaultPageShell>
     </>
   )
 }

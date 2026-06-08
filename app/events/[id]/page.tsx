@@ -3,10 +3,8 @@ import { notFound } from 'next/navigation'
 import { EventDetailInfoRow, eventDetailIcons } from '@/components/EventDetailInfoRow'
 import { EventImage } from '@/components/EventImage'
 import { Header } from '@/components/Header'
-import {
-  formatEventDetailDateTime,
-  formatEventPrice,
-} from '@/lib/format'
+import { PageShell } from '@/components/PageShell'
+import { formatEventDetailDateTime, formatEventPrice } from '@/lib/format'
 import { createClient } from '@/lib/supabase/server'
 import type { Event } from '@/lib/types/event'
 
@@ -39,14 +37,14 @@ export default async function EventPage({ params }: EventPageProps) {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-6">
+      <PageShell>
         <article className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
           {typedEvent.image_url && (
             <div className="relative aspect-[16/9] w-full bg-zinc-100">
               <EventImage
                 src={typedEvent.image_url}
                 alt={typedEvent.title}
-                sizes="(max-width: 768px) 100vw, 672px"
+                sizes="(max-width: 1024px) 100vw, 672px"
                 priority
               />
               <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
@@ -128,7 +126,7 @@ export default async function EventPage({ params }: EventPageProps) {
             </div>
           </div>
         </article>
-      </main>
+      </PageShell>
     </>
   )
 }

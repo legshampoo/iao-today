@@ -9,6 +9,15 @@ function dateKeyInManila(date: Date): string {
   }).format(date)
 }
 
+export function formatTodayInManila(): string {
+  return new Intl.DateTimeFormat('en-PH', {
+    timeZone: PHT_TIMEZONE,
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date())
+}
+
 export function formatEventTime(isoDate: string): string {
   return new Intl.DateTimeFormat('en-PH', {
     timeZone: PHT_TIMEZONE,

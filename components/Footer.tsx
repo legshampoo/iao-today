@@ -3,7 +3,7 @@ import Link from 'next/link'
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-zinc-200 bg-white text-zinc-600">
-      <div className="mx-auto grid max-w-3xl gap-8 px-4 py-10 sm:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2">
         <div>
           <h2 className="text-sm font-semibold text-zinc-900">Support</h2>
           <ul className="mt-3 space-y-2 text-sm">
@@ -16,16 +16,6 @@ export function Footer() {
               <Link href="/contact" className="transition-colors hover:text-zinc-900">
                 Contact
               </Link>
-            </li>
-            <li>
-              <a
-                href="https://wa.me/639565431022"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors hover:text-zinc-900"
-              >
-                Contact IAO Today on WhatsApp
-              </a>
             </li>
           </ul>
         </div>
@@ -46,7 +36,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-zinc-200">
-        <p className="mx-auto max-w-3xl px-4 py-4 text-center text-xs text-zinc-500">
+        <p className="mx-auto max-w-6xl px-4 py-4 text-center text-xs text-zinc-500">
           © 2026 IAO Today. All rights reserved.
         </p>
       </div>

@@ -1,10 +1,11 @@
+import { DefaultPageShell } from '@/components/DefaultPageShell'
 import { Header } from '@/components/Header'
 
 export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <DefaultPageShell>
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">About</h1>
         <div className="mt-6 space-y-4 text-sm leading-7 text-zinc-700">
           <p>
@@ -22,7 +23,7 @@ export default function AboutPage() {
             community.
           </p>
         </div>
-      </main>
+      </DefaultPageShell>
     </>
   )
 }

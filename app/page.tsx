@@ -1,5 +1,6 @@
 import { EventCard } from '@/components/EventCard'
 import { Header } from '@/components/Header'
+import { PageShell } from '@/components/PageShell'
 import { createClient } from '@/lib/supabase/server'
 import type { Event } from '@/lib/types/event'
 
@@ -15,10 +16,12 @@ export default async function Home() {
     .gte('starts_at', new Date().toISOString())
     .order('starts_at', { ascending: true })
 
+  const upcoming = (events ?? []) as Event[]
+
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <PageShell>
         <div className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
             Upcoming Events
@@ -34,22 +37,22 @@ export default async function Home() {
           </p>
         )}
 
-        {!error && (!events || events.length === 0) && (
+        {!error && upcoming.length === 0 && (
           <p className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center text-sm text-zinc-500">
             No upcoming events yet. Check back soon.
           </p>
         )}
 
-        {!error && events && events.length > 0 && (
+        {!error && upcoming.length > 0 && (
           <ul className="flex flex-col gap-4">
-            {(events as Event[]).map((event) => (
+            {upcoming.map((event) => (
               <li key={event.id}>
                 <EventCard event={event} isOwner={user?.id === event.user_id} />
               </li>
             ))}
           </ul>
         )}
-      </main>
+      </PageShell>
     </>
   )
 }

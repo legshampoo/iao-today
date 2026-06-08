@@ -1,11 +1,12 @@
 import { ContactForm } from '@/components/ContactForm'
+import { DefaultPageShell } from '@/components/DefaultPageShell'
 import { Header } from '@/components/Header'
 
 export default function ContactPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-8">
+      <DefaultPageShell>
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Contact</h1>
         <p className="mt-2 text-sm text-zinc-600">
           Questions, feedback, or help with your event? Send us a message.
@@ -13,7 +14,7 @@ export default function ContactPage() {
         <div className="mt-8">
           <ContactForm />
         </div>
-      </main>
+      </DefaultPageShell>
     </>
   )
 }
