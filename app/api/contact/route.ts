@@ -74,8 +74,27 @@ export async function POST(request: Request) {
   })
 
   if (error) {
+    console.error('Resend contact error:', error)
+
+    const resendMessage = 'message' in error ? String(error.message) : ''
+
+    if (resendMessage.includes('your own email address')) {
+      return NextResponse.json(
+        {
+          error:
+            'Email is not fully set up yet. The site owner needs to verify a domain in Resend, or set CONTACT_TO_EMAIL to their Resend account email.',
+        },
+        { status: 500 }
+      )
+    }
+
     return NextResponse.json(
-      { error: 'Could not send message. Please try again later.' },
+      {
+        error:
+          process.env.NODE_ENV === 'development' && resendMessage
+            ? resendMessage
+            : 'Could not send message. Please try again later.',
+      },
       { status: 500 }
     )
   }
