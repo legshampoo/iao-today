@@ -2,15 +2,13 @@ import { NextResponse } from 'next/server'
 import { isCronAuthorized } from '@/lib/whatsapp/cron-auth'
 import { runDigest } from '@/lib/whatsapp/run-digest'
 
-/** Vercel Cron — auth via Authorization: Bearer CRON_SECRET header. */
+/** Uptime Robot / external schedulers — auth via ?key=CRON_SECRET (no custom headers needed). */
 export async function GET(request: Request) {
   if (!isCronAuthorized(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { searchParams } = new URL(request.url)
-  const preview = searchParams.get('preview') === '1'
-  const result = await runDigest({ preview })
+  const result = await runDigest({ preview: false })
 
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 500 })
