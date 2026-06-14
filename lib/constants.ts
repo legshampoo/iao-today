@@ -1,5 +1,8 @@
-/** Square logo for the sidebar — save your file as public/logo.jpg */
+/** Square logo — save your file as public/logo.jpg */
 export const LOGO_PATH = '/logo.jpg'
+
+/** Wide hero for the sidebar — save as public/hero.jpg (~1600×640). Falls back to logo.jpg until added. */
+export const HERO_IMAGE_PATH = '/hero.jpg'
 
 export const WHATSAPP_GROUP_URL =
   'https://chat.whatsapp.com/JKDyAllhK68EeydgIMinLt'

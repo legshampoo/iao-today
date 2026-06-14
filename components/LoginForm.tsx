@@ -20,6 +20,8 @@ export function LoginForm({ authError }: LoginFormProps) {
     setError(null)
 
     const supabase = createClient()
+    await supabase.auth.signOut()
+
     const { error: signInError } = await supabase.auth.signInWithOtp({
       email,
       options: {

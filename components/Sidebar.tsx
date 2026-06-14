@@ -1,11 +1,29 @@
 import Image from 'next/image'
 import {
   DEFAULT_LOCATION_LABEL,
-  LOGO_PATH,
+  HERO_IMAGE_PATH,
   WHATSAPP_CHANNEL_URL,
   WHATSAPP_GROUP_URL,
 } from '@/lib/constants'
 import { formatTodayInManila } from '@/lib/format'
+
+function MapPinIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5 shrink-0"
+    >
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  )
+}
 
 function WhatsAppIcon() {
   return (
@@ -26,18 +44,25 @@ export function Sidebar() {
 
   return (
     <aside className="space-y-6">
-      <div className="relative aspect-square overflow-hidden rounded-2xl bg-zinc-100">
+      <div className="relative h-[20vh] min-h-[120px] w-full overflow-hidden rounded-2xl bg-zinc-100 lg:aspect-[5/3] lg:h-auto">
         <Image
-          src={LOGO_PATH}
-          alt="IAO Today"
+          src={HERO_IMAGE_PATH}
+          alt="Siargao Today"
           fill
           className="object-cover"
-          sizes="288px"
+          sizes="(max-width: 1024px) 100vw, 288px"
           priority
         />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent px-4 pb-4 pt-16 text-white">
-          <p className="text-lg font-semibold leading-snug">{dateTimeLabel}</p>
-          <p className="mt-1 text-sm text-white/85">{locationLabel}</p>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
+        <div className="absolute inset-0 flex flex-col justify-between p-4 text-white">
+          <div>
+            <p className="text-2xl font-bold tracking-tight">iao.today</p>
+            <p className="mt-0.5 text-sm font-medium text-white/90">{dateTimeLabel}</p>
+          </div>
+          <p className="flex items-center gap-1.5 text-sm text-white/90">
+            <MapPinIcon />
+            {locationLabel}
+          </p>
         </div>
       </div>
 

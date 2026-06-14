@@ -16,15 +16,7 @@ export async function Header() {
         </Link>
         <nav className="flex items-center gap-4">
           {user ? (
-            <>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900"
-              >
-                Dashboard
-              </Link>
-              <LogoutButton />
-            </>
+            <LogoutButton />
           ) : (
             <Link
               href="/login"
