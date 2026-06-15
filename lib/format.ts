@@ -1,6 +1,6 @@
 const PHT_TIMEZONE = 'Asia/Manila'
 
-function dateKeyInManila(date: Date): string {
+export function dateKeyInManila(date: Date): string {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: PHT_TIMEZONE,
     year: 'numeric',

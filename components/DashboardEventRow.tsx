@@ -4,22 +4,15 @@ import type { Event } from '@/lib/types/event'
 
 type DashboardEventRowProps = {
   event: Event
+  expired?: boolean
 }
 
-export function DashboardEventRow({ event }: DashboardEventRowProps) {
-  const isPast = new Date(event.starts_at) < new Date()
-
+export function DashboardEventRow({ event, expired = false }: DashboardEventRowProps) {
   return (
     <EventThumbCard
       event={event}
       href={`/events/${event.id}`}
-      badges={
-        isPast ? (
-          <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-500">
-            Past
-          </span>
-        ) : undefined
-      }
+      expired={expired}
       trailing={
         <div className="flex flex-col items-end gap-2">
           <Link

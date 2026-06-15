@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { LogoutButton } from '@/components/LogoutButton'
 import { createClient } from '@/lib/supabase/server'
 
+const navLinkClass =
+  'text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900'
+
 export async function Header() {
   const supabase = await createClient()
   const {
@@ -16,12 +19,17 @@ export async function Header() {
         </Link>
         <nav className="flex items-center gap-4">
           {user ? (
-            <LogoutButton />
+            <>
+              <Link href="/" className={navLinkClass}>
+                All Events
+              </Link>
+              <Link href="/dashboard" className={navLinkClass}>
+                My Events
+              </Link>
+              <LogoutButton />
+            </>
           ) : (
-            <Link
-              href="/login"
-              className="text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900"
-            >
+            <Link href="/login" className={navLinkClass}>
               Login
             </Link>
           )}

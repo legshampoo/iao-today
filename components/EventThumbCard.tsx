@@ -9,6 +9,7 @@ type EventThumbCardProps = {
   trailing?: React.ReactNode
   footer?: React.ReactNode
   badges?: React.ReactNode
+  expired?: boolean
 }
 
 function CalendarIcon() {
@@ -64,6 +65,7 @@ export function EventThumbCard({
   trailing,
   footer,
   badges,
+  expired = false,
 }: EventThumbCardProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition-colors hover:border-zinc-300">
@@ -76,6 +78,13 @@ export function EventThumbCard({
                 alt={event.title}
                 sizes="96px"
               />
+              {expired && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-950/25">
+                  <span className="rounded-full bg-red-100/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-red-400">
+                    Expired
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
