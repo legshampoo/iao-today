@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Footer } from '@/components/Footer'
+import icon from './icon.png'
 import './globals.css'
 
 const geistSans = Geist({
@@ -16,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'IAO Today',
   description: "What's happening in Siargao, Philippines",
+  icons: {
+    icon: icon.src,
+  },
 };
 
 export default function RootLayout({
