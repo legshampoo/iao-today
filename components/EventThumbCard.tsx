@@ -103,7 +103,11 @@ export function EventThumbCard({
             <p className="mt-2 flex items-center gap-2 text-sm text-zinc-500">
               <CalendarIcon />
               <span className="truncate">
-                {formatEventSchedule(event.starts_at, event.ends_at)}
+                {formatEventSchedule(
+                  event.starts_at,
+                  event.ends_at,
+                  event.time_tbc
+                )}
               </span>
             </p>
 

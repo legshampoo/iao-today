@@ -105,7 +105,8 @@ export default async function EventPage({ params }: EventPageProps) {
                 icon={eventDetailIcons.calendar}
                 primary={formatEventDetailDateTime(
                   typedEvent.starts_at,
-                  typedEvent.ends_at
+                  typedEvent.ends_at,
+                  typedEvent.time_tbc
                 )}
               />
               <EventDetailInfoRow

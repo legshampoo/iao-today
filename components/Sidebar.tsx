@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { InstagramAccountForm } from '@/components/InstagramAccountForm'
 import {
   DEFAULT_LOCATION_LABEL,
   HERO_IMAGE_PATH,
@@ -90,6 +91,19 @@ export function Sidebar() {
             <WhatsAppIcon />
             WhatsApp Channel
           </a>
+        </div>
+
+        <div className="mt-6 border-t border-zinc-200 pt-6">
+          <h3 className="text-sm font-semibold text-zinc-900">
+            Missing an event?
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-zinc-600">
+            Submit an Instagram account and we&apos;ll automatically monitor it
+            for future events.
+          </p>
+          <div className="mt-4">
+            <InstagramAccountForm />
+          </div>
         </div>
       </div>
     </aside>

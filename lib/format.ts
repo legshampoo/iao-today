@@ -52,17 +52,25 @@ export function formatEventDayLabel(isoDate: string): string {
 
 export function formatEventSchedule(
   startsAt: string,
-  endsAt: string | null
+  endsAt: string | null,
+  timeTbc = false
 ): string {
+  const dayLabel = formatEventDayLabel(startsAt)
+
+  if (timeTbc) {
+    return dayLabel
+  }
+
   const startTime = formatEventTime(startsAt)
   const timeRange = endsAt ? `${startTime} – ${formatEventTime(endsAt)}` : startTime
 
-  return `${formatEventDayLabel(startsAt)} · ${timeRange}`
+  return `${dayLabel} · ${timeRange}`
 }
 
 export function formatEventDetailDateTime(
   startsAt: string,
-  endsAt: string | null
+  endsAt: string | null,
+  timeTbc = false
 ): string {
   const dayPart = new Intl.DateTimeFormat('en-PH', {
     timeZone: PHT_TIMEZONE,
@@ -70,6 +78,10 @@ export function formatEventDetailDateTime(
     month: 'short',
     day: 'numeric',
   }).format(new Date(startsAt))
+
+  if (timeTbc) {
+    return dayPart
+  }
 
   const startTime = formatEventTime(startsAt)
   const timePart = endsAt ? `${startTime} - ${formatEventTime(endsAt)}` : startTime

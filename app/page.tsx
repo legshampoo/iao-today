@@ -1,6 +1,7 @@
 import { EventCard } from '@/components/EventCard'
 import { Header } from '@/components/Header'
 import { PageShell } from '@/components/PageShell'
+import { isUpcomingEvent, startOfTodayManilaIso } from '@/lib/events/upcoming'
 import { createClient } from '@/lib/supabase/server'
 import type { Event } from '@/lib/types/event'
 
@@ -13,10 +14,12 @@ export default async function Home() {
   const { data: events, error } = await supabase
     .from('events')
     .select('*')
-    .gte('starts_at', new Date().toISOString())
+    .gte('starts_at', startOfTodayManilaIso())
     .order('starts_at', { ascending: true })
 
-  const upcoming = (events ?? []) as Event[]
+  const upcoming = ((events ?? []) as Event[]).filter((event) =>
+    isUpcomingEvent(event)
+  )
 
   return (
     <>

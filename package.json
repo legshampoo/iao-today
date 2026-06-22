@@ -6,6 +6,9 @@
     "migrate": "node scripts/migrate.mjs",
     "digest:preview": "node scripts/whatsapp-digest.mjs preview",
     "digest:send": "node scripts/whatsapp-digest.mjs send",
+    "instagram:scrape": "node scripts/instagram-scrape.mjs",
+    "instagram:process": "node scripts/instagram-process.mjs",
+    "ngrok": "ngrok http 3000",
     "dev": "pnpm migrate && next dev",
     "build": "pnpm migrate && next build",
     "start": "pnpm migrate && next start",
@@ -13,14 +16,17 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
+    "@langchain/core": "^1.2.0",
+    "@langchain/langgraph": "^1.4.4",
+    "@langchain/openai": "^1.5.1",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.107.0",
     "next": "16.2.7",
+    "pg": "^8.16.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.77.0",
     "resend": "^6.12.4",
-    "pg": "^8.16.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {

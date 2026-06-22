@@ -15,7 +15,7 @@ function truncateForWhatsApp(text: string): string {
 
 function formatEventLine(event: Event, index: number, siteUrl: string): string {
   const priceLabel = formatEventPrice(event.is_free, event.price_php)
-  const timeLabel = formatEventTime(event.starts_at)
+  const timeLabel = event.time_tbc ? 'Time TBC' : formatEventTime(event.starts_at)
   const eventUrl = `${siteUrl}/events/${event.id}`
 
   return [
