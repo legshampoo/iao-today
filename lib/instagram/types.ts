@@ -23,6 +23,7 @@ export type AccountScrapeResult = {
 export type ScrapeTriggerResult =
   | {
       ok: true
+      batchId: string | null
       accountCount: number
       started: Array<{ username: string; runId: string }>
       failed: Array<{ username: string; error: string }>

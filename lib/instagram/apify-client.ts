@@ -6,11 +6,12 @@ type StartRunResult = {
   datasetId: string | null
 }
 
-function buildWebhookUrl(username: string): string {
+function buildWebhookUrl(username: string, batchId: string): string {
   const { siteUrl, cronSecret } = getInstagramScrapeConfig()
   const params = new URLSearchParams({
     key: cronSecret,
     username,
+    batchId,
   })
 
   return `${siteUrl}/api/webhooks/apify?${params.toString()}`
@@ -28,10 +29,11 @@ function buildAdHocWebhooksParam(requestUrl: string): string {
 }
 
 export async function startInstagramProfileScrape(
-  username: string
+  username: string,
+  batchId: string
 ): Promise<StartRunResult> {
   const { apifyToken, actorId, postsLimit } = getInstagramScrapeConfig()
-  const webhookUrl = buildWebhookUrl(username)
+  const webhookUrl = buildWebhookUrl(username, batchId)
   const webhooks = buildAdHocWebhooksParam(webhookUrl)
 
   const url = new URL(`https://api.apify.com/v2/acts/${actorId}/runs`)

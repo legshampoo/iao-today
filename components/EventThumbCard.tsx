@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { EventImage } from '@/components/EventImage'
-import { formatEventPrice, formatEventSchedule } from '@/lib/format'
+import {
+  formatEventPrice,
+  formatEventSchedule,
+  formatEventTimeLabel,
+} from '@/lib/format'
 import type { Event } from '@/lib/types/event'
 
 type EventThumbCardProps = {
@@ -10,6 +14,7 @@ type EventThumbCardProps = {
   footer?: React.ReactNode
   badges?: React.ReactNode
   expired?: boolean
+  groupedByDay?: boolean
 }
 
 function CalendarIcon() {
@@ -66,6 +71,7 @@ export function EventThumbCard({
   footer,
   badges,
   expired = false,
+  groupedByDay = false,
 }: EventThumbCardProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition-colors hover:border-zinc-300">
@@ -103,11 +109,17 @@ export function EventThumbCard({
             <p className="mt-2 flex items-center gap-2 text-sm text-zinc-500">
               <CalendarIcon />
               <span className="truncate">
-                {formatEventSchedule(
-                  event.starts_at,
-                  event.ends_at,
-                  event.time_tbc
-                )}
+                {groupedByDay
+                  ? formatEventTimeLabel(
+                      event.starts_at,
+                      event.ends_at,
+                      event.time_tbc
+                    )
+                  : formatEventSchedule(
+                      event.starts_at,
+                      event.ends_at,
+                      event.time_tbc
+                    )}
               </span>
             </p>
 

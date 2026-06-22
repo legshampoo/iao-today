@@ -55,8 +55,6 @@ export async function processInstagramPost(
     const skipReason = getSkipReason(result)
 
     if (skipReason) {
-      console.log('[instagram-process] skipped', { postId, reason: skipReason })
-
       return {
         ok: true,
         status: 'skipped',
@@ -74,12 +72,6 @@ export async function processInstagramPost(
       eventIds: result.eventIds,
     })
 
-    console.log('[instagram-process] created events', {
-      postId,
-      eventIds: result.eventIds,
-      titles: result.extractedEvents?.map((event) => event.title),
-    })
-
     return {
       ok: true,
       status: 'processed',
@@ -89,7 +81,6 @@ export async function processInstagramPost(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     await markPostFailed(postId, message)
-    console.error(`[instagram-process] failed for ${postId}:`, message)
 
     return { ok: false, postId, error: message }
   }

@@ -11,6 +11,7 @@ export async function POST(request: Request) {
 
   const { searchParams } = new URL(request.url)
   const username = searchParams.get('username')
+  const batchId = searchParams.get('batchId')
 
   if (!username) {
     return NextResponse.json({ error: 'Missing username' }, { status: 400 })
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const result = await handleApifyWebhook(username, payload)
+  const result = await handleApifyWebhook(username, batchId, payload)
 
   if (!result.ok) {
     return NextResponse.json({ error: result.error }, { status: 500 })

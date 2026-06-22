@@ -67,6 +67,19 @@ export function formatEventSchedule(
   return `${dayLabel} · ${timeRange}`
 }
 
+export function formatEventTimeLabel(
+  startsAt: string,
+  endsAt: string | null,
+  timeTbc = false
+): string {
+  if (timeTbc) {
+    return 'Time TBC'
+  }
+
+  const startTime = formatEventTime(startsAt)
+  return endsAt ? `${startTime} – ${formatEventTime(endsAt)}` : startTime
+}
+
 export function formatEventDetailDateTime(
   startsAt: string,
   endsAt: string | null,

@@ -1,7 +1,9 @@
 import { EventCard } from '@/components/EventCard'
 import { Header } from '@/components/Header'
 import { PageShell } from '@/components/PageShell'
+import { groupEventsByDay } from '@/lib/events/group-by-day'
 import { isUpcomingEvent, startOfTodayManilaIso } from '@/lib/events/upcoming'
+import { dateKeyInManila } from '@/lib/format'
 import { createClient } from '@/lib/supabase/server'
 import type { Event } from '@/lib/types/event'
 
@@ -20,6 +22,8 @@ export default async function Home() {
   const upcoming = ((events ?? []) as Event[]).filter((event) =>
     isUpcomingEvent(event)
   )
+  const dayGroups = groupEventsByDay(upcoming)
+  const todayKey = dateKeyInManila(new Date())
 
   return (
     <>
@@ -40,20 +44,31 @@ export default async function Home() {
           </p>
         )}
 
-        {!error && upcoming.length === 0 && (
-          <p className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-6 py-12 text-center text-sm text-zinc-500">
-            No upcoming events yet. Check back soon.
-          </p>
-        )}
-
-        {!error && upcoming.length > 0 && (
-          <ul className="flex flex-col gap-4">
-            {upcoming.map((event) => (
-              <li key={event.id}>
-                <EventCard event={event} isOwner={user?.id === event.user_id} />
-              </li>
+        {!error && (
+          <div className="flex flex-col gap-8">
+            {dayGroups.map((group) => (
+              <section key={group.dateKey}>
+                <h2 className="text-sm font-semibold tracking-tight text-zinc-900">
+                  {group.label}
+                </h2>
+                {group.events.length === 0 && group.dateKey === todayKey ? (
+                  <p className="mt-3 text-sm text-zinc-500">No events today</p>
+                ) : (
+                  <ul className="mt-3 flex flex-col gap-3">
+                    {group.events.map((event) => (
+                      <li key={event.id}>
+                        <EventCard
+                          event={event}
+                          isOwner={user?.id === event.user_id}
+                          groupedByDay
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
             ))}
-          </ul>
+          </div>
         )}
       </PageShell>
     </>
