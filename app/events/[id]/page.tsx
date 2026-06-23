@@ -40,12 +40,13 @@ export default async function EventPage({ params }: EventPageProps) {
       <PageShell>
         <article className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
           {typedEvent.image_url && (
-            <div className="relative aspect-[16/9] w-full bg-zinc-100">
+            <div className="relative w-full bg-zinc-100">
               <EventImage
                 src={typedEvent.image_url}
                 alt={typedEvent.title}
                 sizes="(max-width: 1024px) 100vw, 672px"
                 priority
+                fit="native"
               />
               <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
                 <Link
@@ -113,11 +114,13 @@ export default async function EventPage({ params }: EventPageProps) {
                 icon={eventDetailIcons.pin}
                 primary={typedEvent.location}
               />
-              <EventDetailInfoRow
-                icon={eventDetailIcons.ticket}
-                primary={priceLabel}
-                secondary={typedEvent.is_free ? 'Free event' : undefined}
-              />
+              {priceLabel && (
+                <EventDetailInfoRow
+                  icon={eventDetailIcons.ticket}
+                  primary={priceLabel}
+                  secondary={typedEvent.is_free ? 'Free event' : undefined}
+                />
+              )}
             </div>
 
             <div className="mt-8">

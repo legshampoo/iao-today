@@ -114,14 +114,22 @@ export function formatEventDate(isoDate: string): string {
   }).format(new Date(isoDate))
 }
 
-export function formatEventPrice(isFree: boolean, pricePhp: number | null): string {
-  if (isFree) return 'Free'
-  if (pricePhp == null) return 'Free'
+export function formatEventPrice(
+  isFree: boolean,
+  pricePhp: number | null
+): string | null {
+  if (pricePhp != null) {
+    return new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(pricePhp)
+  }
 
-  return new Intl.NumberFormat('en-PH', {
-    style: 'currency',
-    currency: 'PHP',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(pricePhp)
+  if (isFree) {
+    return 'Free'
+  }
+
+  return null
 }

@@ -6,6 +6,54 @@ type StartRunResult = {
   datasetId: string | null
 }
 
+export type ApifyRunStatus =
+  | 'READY'
+  | 'RUNNING'
+  | 'SUCCEEDED'
+  | 'FAILED'
+  | 'TIMING-OUT'
+  | 'TIMED-OUT'
+  | 'ABORTING'
+  | 'ABORTED'
+
+const TERMINAL_APIFY_RUN_STATUSES = new Set<ApifyRunStatus>([
+  'SUCCEEDED',
+  'FAILED',
+  'TIMED-OUT',
+  'ABORTED',
+])
+
+export function isApifyRunTerminal(status: ApifyRunStatus): boolean {
+  return TERMINAL_APIFY_RUN_STATUSES.has(status)
+}
+
+export async function getApifyRunStatus(runId: string): Promise<ApifyRunStatus> {
+  const { apifyToken } = getInstagramScrapeConfig()
+
+  const response = await fetch(
+    `https://api.apify.com/v2/actor-runs/${runId}?token=${apifyToken}`
+  )
+
+  if (!response.ok) {
+    const body = await response.text()
+    throw new Error(
+      `Failed to fetch Apify run ${runId} (${response.status}): ${body}`
+    )
+  }
+
+  const payload = (await response.json()) as {
+    data?: { status?: ApifyRunStatus }
+  }
+
+  const status = payload.data?.status
+
+  if (!status) {
+    throw new Error(`Apify run ${runId} did not return a status.`)
+  }
+
+  return status
+}
+
 function buildWebhookUrl(username: string, batchId: string): string {
   const { siteUrl, cronSecret } = getInstagramScrapeConfig()
   const params = new URLSearchParams({

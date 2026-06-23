@@ -17,10 +17,11 @@ function formatEventLine(event: Event, index: number, siteUrl: string): string {
   const priceLabel = formatEventPrice(event.is_free, event.price_php)
   const timeLabel = event.time_tbc ? 'Time TBC' : formatEventTime(event.starts_at)
   const eventUrl = `${siteUrl}/events/${event.id}`
+  const details = [timeLabel, event.location, priceLabel].filter(Boolean)
 
   return [
     `${index}. ${event.title}`,
-    `   ${timeLabel} · ${event.location} · ${priceLabel}`,
+    `   ${details.join(' · ')}`,
     `   ${eventUrl}`,
   ].join('\n')
 }

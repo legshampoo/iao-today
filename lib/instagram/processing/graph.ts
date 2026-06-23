@@ -1,4 +1,5 @@
 import { Annotation, END, START, StateGraph } from '@langchain/langgraph'
+import { parseManilaDateTime } from '@/lib/datetime/manila'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type {
   InstagramPostRow,
@@ -154,7 +155,13 @@ async function saveNode(state: typeof GraphState.State) {
   const eventIds: string[] = []
 
   for (const extracted of state.extractedEvents) {
-    const startsAt = new Date(extracted.starts_at)
+    const startsAt = parseManilaDateTime(
+      extracted.starts_at,
+      extracted.time_tbc
+    )
+    const endsAt = extracted.ends_at
+      ? parseManilaDateTime(extracted.ends_at, false)
+      : null
     const instagramPostKey = buildInstagramEventKey(
       state.post.post_id,
       startsAt,
@@ -182,9 +189,7 @@ async function saveNode(state: typeof GraphState.State) {
         description: extracted.description.trim(),
         location: extracted.location.trim(),
         starts_at: startsAt.toISOString(),
-        ends_at: extracted.ends_at
-          ? new Date(extracted.ends_at).toISOString()
-          : null,
+        ends_at: endsAt ? endsAt.toISOString() : null,
         time_tbc: extracted.time_tbc,
         is_free: extracted.is_free,
         price_php: extracted.is_free ? null : extracted.price_php,

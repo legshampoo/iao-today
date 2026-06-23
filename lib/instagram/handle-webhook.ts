@@ -121,7 +121,22 @@ export async function handleApifyWebhook(
 
     const items = await fetchApifyDatasetItems(datasetId)
     const result = normalizeAccountPosts(username, items)
+
+    if (result.posts.length === 0) {
+      logInstagramStep(
+        'webhook',
+        `@${username} — no scrapable posts (latest may be a reel)`
+      )
+    }
+
     const postIdsToProcess = await saveScrapedPosts(result)
+
+    if (result.posts.length > 0 && postIdsToProcess.length === 0) {
+      logInstagramStep(
+        'webhook',
+        `@${username} — ${result.posts.length} post(s) already processed`
+      )
+    }
 
     triggerAsyncProcessing(
       username,

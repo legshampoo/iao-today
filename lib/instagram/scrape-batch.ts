@@ -30,6 +30,57 @@ export async function createScrapeBatch(
   return data.id
 }
 
+function formatAccountBatchDetail(result: AccountBatchResult): string {
+  if (result.scrapeFailed) {
+    return `could not start — ${result.error ?? 'unknown error'}`
+  }
+
+  const parts = [`${result.eventsCreated} event(s) created`]
+
+  if (result.skipped > 0) {
+    parts.push(`${result.skipped} skipped`)
+  }
+
+  if (result.failed > 0) {
+    parts.push(`${result.failed} failed`)
+  }
+
+  if (result.alreadyProcessed > 0) {
+    parts.push(`${result.alreadyProcessed} already processed`)
+  }
+
+  if (result.postsScraped === 0) {
+    parts.push('no posts scraped')
+  }
+
+  return parts.join(', ')
+}
+
+async function mergeAccountBatchResult(
+  batchId: string,
+  username: string,
+  result: AccountBatchResult
+): Promise<Record<string, AccountBatchResult>> {
+  const supabase = createAdminClient()
+
+  const { data, error } = await supabase.rpc(
+    'merge_instagram_batch_account_result',
+    {
+      p_batch_id: batchId,
+      p_username: username,
+      p_result: result,
+    }
+  )
+
+  if (error) {
+    throw new Error(
+      `Failed to update batch for @${username}: ${error.message}`
+    )
+  }
+
+  return (data ?? {}) as Record<string, AccountBatchResult>
+}
+
 export async function recordAccountBatchResult(
   batchId: string,
   username: string,
@@ -37,9 +88,19 @@ export async function recordAccountBatchResult(
 ): Promise<void> {
   const supabase = createAdminClient()
 
+  let accountResults: Record<string, AccountBatchResult>
+
+  try {
+    accountResults = await mergeAccountBatchResult(batchId, username, result)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.error(`[instagram:summary] ${message}`)
+    return
+  }
+
   const { data: batch, error: fetchError } = await supabase
     .from('instagram_scrape_batches')
-    .select('account_usernames, account_results, finished_at')
+    .select('account_usernames, finished_at')
     .eq('id', batchId)
     .maybeSingle()
 
@@ -47,38 +108,16 @@ export async function recordAccountBatchResult(
     return
   }
 
-  const accountResults = (batch.account_results ?? {}) as Record<
-    string,
-    AccountBatchResult
-  >
-
-  accountResults[username] = result
-
-  const { error: updateError } = await supabase
-    .from('instagram_scrape_batches')
-    .update({ account_results: accountResults })
-    .eq('id', batchId)
-
-  if (updateError) {
-    console.error(
-      `[instagram:summary] Failed to update batch for @${username}:`,
-      updateError.message
-    )
-    return
-  }
-
   const completedCount = Object.keys(accountResults).length
   const expectedCount = batch.account_usernames.length
+  const step = result.scrapeFailed ? 'scrape' : 'process'
+
+  logInstagramStep(
+    step,
+    `@${username} — ${formatAccountBatchDetail(result)} (${completedCount}/${expectedCount} accounts)`
+  )
 
   if (completedCount < expectedCount) {
-    const step = result.scrapeFailed ? 'scrape' : 'process'
-    const detail = result.scrapeFailed
-      ? `could not start — ${result.error ?? 'unknown error'}`
-      : 'done'
-    logInstagramStep(
-      step,
-      `@${username} ${detail} (${completedCount}/${expectedCount} accounts)`
-    )
     return
   }
 

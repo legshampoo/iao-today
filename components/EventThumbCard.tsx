@@ -73,6 +73,8 @@ export function EventThumbCard({
   expired = false,
   groupedByDay = false,
 }: EventThumbCardProps) {
+  const priceLabel = formatEventPrice(event.is_free, event.price_php)
+
   return (
     <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 transition-colors hover:border-zinc-300">
       <div className="flex items-center">
@@ -96,9 +98,11 @@ export function EventThumbCard({
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700">
-                {formatEventPrice(event.is_free, event.price_php)}
-              </span>
+              {priceLabel && (
+                <span className="rounded-full border border-zinc-200 bg-white px-2.5 py-0.5 text-xs font-medium text-zinc-700">
+                  {priceLabel}
+                </span>
+              )}
               {badges}
             </div>
 

@@ -1,9 +1,11 @@
 import { instagramProcessingGraph } from '@/lib/instagram/processing/graph'
+import { logInstagramStep } from '@/lib/instagram/logging'
 import {
   getInstagramPost,
   markPostFailed,
   markPostProcessed,
   markPostProcessing,
+  markPostSkipped,
 } from '@/lib/instagram/processing/posts-repository'
 import type { InstagramPostRow } from '@/lib/instagram/types'
 
@@ -55,6 +57,12 @@ export async function processInstagramPost(
     const skipReason = getSkipReason(result)
 
     if (skipReason) {
+      await markPostSkipped(postId, {
+        ...(result.llmResult ?? {}),
+        skipReason,
+      })
+      logInstagramStep('process', `post ${postId} skipped — ${skipReason}`)
+
       return {
         ok: true,
         status: 'skipped',
@@ -81,6 +89,7 @@ export async function processInstagramPost(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
     await markPostFailed(postId, message)
+    logInstagramStep('process', `post ${postId} failed — ${message}`)
 
     return { ok: false, postId, error: message }
   }
