@@ -10,6 +10,9 @@ export async function Header() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const { data: profile } = user
+    ? await supabase.from('profiles').select('admin').eq('id', user.id).maybeSingle()
+    : { data: null }
 
   return (
     <header className="border-b border-zinc-200 bg-white">
@@ -21,11 +24,16 @@ export async function Header() {
           {user ? (
             <>
               <Link href="/" className={navLinkClass}>
-                All Events
+                Discover
               </Link>
               <Link href="/dashboard" className={navLinkClass}>
-                My Events
+                Dashboard
               </Link>
+              {profile?.admin && (
+                <Link href="/admin" className={navLinkClass}>
+                  Admin
+                </Link>
+              )}
               <LogoutButton />
             </>
           ) : (

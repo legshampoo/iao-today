@@ -34,7 +34,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 href="/dashboard"
                 className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
               >
-                Go to My Events
+                Go to Dashboard
               </Link>
               <LogoutButton />
             </div>

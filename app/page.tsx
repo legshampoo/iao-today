@@ -1,72 +1,93 @@
-import { EventCard } from '@/components/EventCard'
+import { CategoryChips } from '@/components/CategoryChips'
 import { Header } from '@/components/Header'
+import { HorizontalSection } from '@/components/HorizontalSection'
+import { ListingCard } from '@/components/ListingCard'
 import { PageShell } from '@/components/PageShell'
-import { groupEventsByDay } from '@/lib/events/group-by-day'
-import { isUpcomingEvent, startOfTodayManilaIso } from '@/lib/events/upcoming'
-import { dateKeyInManila } from '@/lib/format'
+import {
+  getHomepageListingSections,
+  type ListingSection,
+  type ListingSectionKey,
+} from '@/lib/listings/queries'
 import { createClient } from '@/lib/supabase/server'
-import type { Event } from '@/lib/types/event'
+
+const FEATURED_SECTIONS = new Set<ListingSectionKey>(['top-picks'])
+const COMPACT_SECTIONS = new Set<ListingSectionKey>(['recently-added'])
 
 export default async function Home() {
   const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
 
-  const { data: events, error } = await supabase
-    .from('events')
-    .select('*')
-    .gte('starts_at', startOfTodayManilaIso())
-    .order('starts_at', { ascending: true })
+  let sections: ListingSection[] = []
+  let error: string | null = null
 
-  const upcoming = ((events ?? []) as Event[]).filter((event) =>
-    isUpcomingEvent(event)
-  )
-  const dayGroups = groupEventsByDay(upcoming)
-  const todayKey = dateKeyInManila(new Date())
+  try {
+    sections = await getHomepageListingSections(supabase)
+  } catch {
+    error = 'Could not load listings. Check your Supabase connection.'
+  }
 
   return (
     <>
       <Header />
       <PageShell>
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-            Upcoming Events
-          </h1>
-          <p className="mt-1 text-sm text-zinc-500">
-            What&apos;s happening in Siargao
-          </p>
+        <div className="mb-6 space-y-5">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
+              Siargao discovery guide
+            </p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-950">
+              What should I do today?
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
+              Fresh picks for events, deals, tours, restaurants, wellness, and
+              places to stay around the island.
+            </p>
+          </div>
+          <CategoryChips />
         </div>
 
-        {error && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            Could not load events. Check your Supabase connection.
+        {error ? (
+          <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
           </p>
-        )}
+        ) : sections.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-zinc-300 bg-white px-6 py-12 text-center">
+            <h2 className="text-lg font-semibold tracking-tight text-zinc-950">
+              Listings are coming soon
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500">
+              The new discovery guide is ready for manually curated listings.
+              Publish the first few in admin and they&apos;ll appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {sections.map((section) => (
+              <HorizontalSection
+                key={section.key}
+                id={section.key}
+                title={section.title}
+                subtitle={section.subtitle}
+                href={section.href}
+              >
+                {section.listings.map((listing) => {
+                  const variant = FEATURED_SECTIONS.has(section.key)
+                    ? 'featured'
+                    : COMPACT_SECTIONS.has(section.key)
+                      ? 'compact'
+                      : 'standard'
+                  const widthClass = FEATURED_SECTIONS.has(section.key)
+                    ? 'w-[78vw] max-w-[340px] sm:w-[320px]'
+                    : COMPACT_SECTIONS.has(section.key)
+                      ? 'w-[58vw] max-w-[230px] sm:w-[220px]'
+                      : 'w-[68vw] max-w-[280px] sm:w-[260px]'
 
-        {!error && (
-          <div className="flex flex-col gap-8">
-            {dayGroups.map((group) => (
-              <section key={group.dateKey}>
-                <h2 className="text-sm font-semibold tracking-tight text-zinc-900">
-                  {group.label}
-                </h2>
-                {group.events.length === 0 && group.dateKey === todayKey ? (
-                  <p className="mt-3 text-sm text-zinc-500">No events today</p>
-                ) : (
-                  <ul className="mt-3 flex flex-col gap-3">
-                    {group.events.map((event) => (
-                      <li key={event.id}>
-                        <EventCard
-                          event={event}
-                          isOwner={user?.id === event.user_id}
-                          groupedByDay
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </section>
+                  return (
+                    <div key={listing.id} className={`shrink-0 snap-start ${widthClass}`}>
+                      <ListingCard listing={listing} variant={variant} />
+                    </div>
+                  )
+                })}
+              </HorizontalSection>
             ))}
           </div>
         )}
