@@ -3,6 +3,7 @@ import { AdminShell } from '@/components/AdminShell'
 import { listingTypeLabel } from '@/lib/listings/format'
 import { createClient } from '@/lib/supabase/server'
 import type { Listing } from '@/lib/types/listing'
+import { buttonClasses } from '@/lib/ui/button'
 
 export default async function AdminListingsPage() {
   const supabase = await createClient()
@@ -16,12 +17,9 @@ export default async function AdminListingsPage() {
   return (
     <AdminShell
       title="Listings"
-      subtitle="Create, edit, publish, and archive everything shown on IAO Today."
+      subtitle="Create, edit, publish, and archive everything shown on Love Siargao."
       action={
-        <Link
-          href="/admin/listings/new"
-          className="rounded-lg bg-zinc-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
-        >
+        <Link href="/admin/listings/new" className={buttonClasses()}>
           New Listing
         </Link>
       }

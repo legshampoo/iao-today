@@ -15,7 +15,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-base font-semibold text-zinc-900">1. Overview</h2>
             <p>
-              IAO Today respects your privacy. This policy describes what information
+              Love Siargao respects your privacy. This policy describes what information
               we collect, how we use it, and your choices.
             </p>
           </section>

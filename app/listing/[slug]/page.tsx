@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { EventDetailInfoRow, eventDetailIcons } from '@/components/EventDetailInfoRow'
 import { EventImage } from '@/components/EventImage'
 import { Header } from '@/components/Header'
+import { ListingCard } from '@/components/ListingCard'
 import { PageShell } from '@/components/PageShell'
 import {
   formatDiscountValidity,
@@ -13,9 +14,10 @@ import {
   listingTypeRoute,
 } from '@/lib/listings/format'
 import { displayListingPrice } from '@/lib/listings/price'
-import { getPublishedListingBySlug } from '@/lib/listings/queries'
+import { getPublishedListingBySlug, getSuggestedListings } from '@/lib/listings/queries'
 import { createClient } from '@/lib/supabase/server'
 import type { ListingWithDetails } from '@/lib/types/listing'
+import { buttonClasses } from '@/lib/ui/button'
 
 type ListingPageProps = {
   params: Promise<{ slug: string }>
@@ -105,6 +107,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
     notFound()
   }
 
+  let suggestedListings: ListingWithDetails[] = []
+
+  try {
+    suggestedListings = await getSuggestedListings(supabase, listing.id)
+  } catch {
+    suggestedListings = []
+  }
+
   const rows = detailRows(listing)
   const badge = listingBadgeLabel(listing, listing.discount_details)
 
@@ -112,13 +122,13 @@ export default async function ListingPage({ params }: ListingPageProps) {
     <>
       <Header />
       <PageShell>
-        <article className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+        <article className="mx-auto max-w-[725px] space-y-4">
           {listing.image_url && (
-            <div className="relative w-full bg-zinc-100">
+            <div className="relative w-full overflow-hidden rounded-2xl bg-zinc-100 shadow-sm">
               <EventImage
                 src={listing.image_url}
                 alt={listing.title}
-                sizes="(max-width: 1024px) 100vw, 672px"
+                sizes="(max-width: 1024px) 100vw, 725px"
                 priority
                 fit="native"
               />
@@ -146,7 +156,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
             </div>
           )}
 
-          <div className="px-5 py-6 sm:px-6">
+          <div className="rounded-2xl border border-zinc-200 bg-white px-6 py-6 shadow-sm sm:px-8">
             {!listing.image_url && (
               <div className="mb-5 flex items-center justify-between gap-3">
                 <Link
@@ -216,12 +226,25 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 href={listing.maps_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex rounded-xl bg-zinc-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+                className={buttonClasses({ className: 'mt-8' })}
               >
                 View on Map
               </a>
             )}
           </div>
+
+          {suggestedListings.length > 0 && (
+            <section className="pt-2">
+              <h2 className="text-lg font-semibold tracking-tight text-zinc-950">
+                You also may like
+              </h2>
+              <div className="mt-4 flex flex-col gap-3">
+                {suggestedListings.map((suggested) => (
+                  <ListingCard key={suggested.id} listing={suggested} variant="horizontal" />
+                ))}
+              </div>
+            </section>
+          )}
         </article>
       </PageShell>
     </>

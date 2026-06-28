@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
+import { Button } from '@/components/ui/Button'
 import {
   displayListingPrice,
   priceTypeLabels,
@@ -599,49 +600,41 @@ export function ListingForm({
       <div className="flex flex-wrap items-center gap-3">
         {mode === 'create' ? (
           <>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="cursor-pointer rounded-lg bg-zinc-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Creating...' : 'Create Listing'}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="secondary"
               onClick={handleSaveDraft}
               disabled={isSubmitting}
-              className="cursor-pointer rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Save as draft
-            </button>
+            </Button>
           </>
         ) : (
           <>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="cursor-pointer rounded-lg bg-zinc-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Saving...' : 'Save Changes'}
-            </button>
+            </Button>
             {isPublished ? (
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={handleUnpublish}
                 disabled={isSubmitting}
-                className="cursor-pointer rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? 'Working...' : 'Unpublish'}
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
                 type="button"
+                variant="success"
                 onClick={handlePublish}
                 disabled={isSubmitting}
-                className="cursor-pointer rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-medium text-emerald-800 transition-colors hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? 'Working...' : 'Publish'}
-              </button>
+              </Button>
             )}
           </>
         )}

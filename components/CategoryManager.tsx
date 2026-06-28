@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Button } from '@/components/ui/Button'
 import { slugifyListingTitle } from '@/lib/listings/format'
 import { createClient } from '@/lib/supabase/client'
 import type { ListingCategory } from '@/lib/types/listing'
@@ -139,13 +140,9 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
             className={inputClass}
           />
         </div>
-        <button
-          type="submit"
-          disabled={isSaving}
-          className="mt-4 rounded-lg bg-zinc-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={isSaving} className="mt-4">
           {isSaving ? 'Adding...' : 'Add Category'}
-        </button>
+        </Button>
       </form>
 
       {message && (

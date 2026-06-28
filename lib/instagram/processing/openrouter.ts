@@ -17,8 +17,8 @@ export function getVisionModel(): ChatOpenAI {
     configuration: {
       baseURL: OPENROUTER_BASE_URL,
       defaultHeaders: {
-        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL ?? 'https://iao.today',
-        'X-Title': 'IAO Today',
+        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL ?? 'https://lovesiargao.com',
+        'X-Title': 'Love Siargao',
       },
     },
   })

@@ -47,7 +47,7 @@ export function Sidebar() {
       <div className="relative h-[20vh] min-h-[120px] w-full overflow-hidden rounded-2xl bg-zinc-100 lg:aspect-[5/3] lg:h-auto">
         <Image
           src={HERO_IMAGE_PATH}
-          alt="Siargao Today"
+          alt="Love Siargao"
           fill
           className="object-cover"
           sizes="(max-width: 1024px) 100vw, 288px"
@@ -56,7 +56,7 @@ export function Sidebar() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-black/55" />
         <div className="absolute inset-0 flex flex-col justify-between p-4 text-white">
           <div>
-            <p className="text-2xl font-bold tracking-tight">iao.today</p>
+            <p className="text-2xl font-bold tracking-tight">Love Siargao</p>
             <p className="mt-0.5 text-sm font-medium text-white/90">{dateTimeLabel}</p>
           </div>
           <p className="flex items-center gap-1.5 text-sm text-white/90">

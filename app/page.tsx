@@ -11,7 +11,7 @@ import {
 import { createClient } from '@/lib/supabase/server'
 
 const FEATURED_SECTIONS = new Set<ListingSectionKey>(['top-picks'])
-const COMPACT_SECTIONS = new Set<ListingSectionKey>(['recently-added'])
+const COMPACT_SECTIONS = new Set<ListingSectionKey>(['all'])
 
 export default async function Home() {
   const supabase = await createClient()

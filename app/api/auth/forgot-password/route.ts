@@ -58,8 +58,8 @@ export async function POST(request: Request) {
   const { error: resendError } = await resend.emails.send({
     from: fromEmail,
     to: [email],
-    subject: 'Reset your IAO Today password',
-    text: `Reset your IAO Today password:\n\n${resetUrl}\n\nIf you did not request this, you can ignore this email.`,
+    subject: 'Reset your Love Siargao password',
+    text: `Reset your Love Siargao password:\n\n${resetUrl}\n\nIf you did not request this, you can ignore this email.`,
   })
 
   if (resendError) {

@@ -9,7 +9,7 @@ export default function AboutPage() {
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">About</h1>
         <div className="mt-6 space-y-4 text-sm leading-7 text-zinc-700">
           <p>
-            IAO Today is a community board for locals, businesses, and organizers
+            Love Siargao is a community board for locals, businesses, and organizers
             on the island to share what&apos;s happening — yoga sessions, markets,
             live music, workshops, and everything in between.
           </p>

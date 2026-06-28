@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { Button } from '@/components/ui/Button'
 import { createClient } from '@/lib/supabase/client'
 
 type LoginFormProps = {
@@ -34,7 +35,7 @@ export function LoginForm({ authError }: LoginFormProps) {
       return
     }
 
-    window.location.href = '/dashboard'
+    window.location.href = '/'
   }
 
   return (
@@ -80,13 +81,9 @@ export function LoginForm({ authError }: LoginFormProps) {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={loading} fullWidth>
           {loading ? 'Signing in...' : 'Sign in'}
-        </button>
+        </Button>
       </form>
 
       <div className="mt-4 flex items-center justify-between text-sm">

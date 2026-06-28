@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { Button } from '@/components/ui/Button'
+import { buttonClasses } from '@/lib/ui/button'
 import { createClient } from '@/lib/supabase/client'
 
 type ResetPasswordFormProps = {
@@ -49,7 +51,7 @@ export function ResetPasswordForm({ hasSession }: ResetPasswordFormProps) {
         </p>
         <Link
           href="/forgot-password"
-          className="mt-6 inline-flex w-full justify-center rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white"
+          className={buttonClasses({ fullWidth: true, className: 'mt-6' })}
         >
           Request new link
         </Link>
@@ -63,7 +65,7 @@ export function ResetPasswordForm({ hasSession }: ResetPasswordFormProps) {
         Choose a new password
       </h1>
       <p className="mt-1 text-sm text-zinc-500">
-        Enter a new password for your IAO Today account.
+        Enter a new password for your Love Siargao account.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -98,13 +100,9 @@ export function ResetPasswordForm({ hasSession }: ResetPasswordFormProps) {
             className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500"
           />
         </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={loading} fullWidth>
           {loading ? 'Updating...' : 'Update password'}
-        </button>
+        </Button>
       </form>
 
       {message && (

@@ -5,8 +5,8 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const nextParam = searchParams.get('next') ?? '/dashboard'
-  const next = nextParam.startsWith('/') ? nextParam : '/dashboard'
+  const nextParam = searchParams.get('next') ?? '/'
+  const next = nextParam.startsWith('/') ? nextParam : '/'
 
   if (!code) {
     return NextResponse.redirect(`${origin}/login?error=auth`)

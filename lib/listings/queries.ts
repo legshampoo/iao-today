@@ -28,7 +28,7 @@ export type ListingSectionKey =
   | 'restaurants'
   | 'wellness'
   | 'accommodation'
-  | 'recently-added'
+  | 'all'
 
 export type ListingSection = {
   key: ListingSectionKey
@@ -95,6 +95,26 @@ export async function getPublishedListingBySlug(
   }
 
   return data ? normalizeListingRow(data as ListingRow) : null
+}
+
+export async function getSuggestedListings(
+  supabase: SupabaseClient,
+  excludeListingId: string,
+  limit = 3
+) {
+  const { data, error } = await supabase
+    .from('listings')
+    .select(LISTING_SELECT)
+    .eq('status', 'published')
+    .neq('id', excludeListingId)
+    .limit(30)
+
+  if (error) {
+    throw new Error(`Failed to load suggested listings: ${error.message}`)
+  }
+
+  const listings = normalizeListingRows(data)
+  return shuffleListings(listings).slice(0, limit)
 }
 
 export async function getAdminListingById(supabase: SupabaseClient, id: string) {
@@ -242,7 +262,7 @@ export async function getHomepageListingSections(
   const sections: ListingSection[] = [
     {
       key: 'top-picks',
-      title: 'Top Picks',
+      title: "Today's Top Picks",
       subtitle: "Handpicked highlights you shouldn't miss",
       href: '/',
       listings: topPicks,
@@ -290,9 +310,9 @@ export async function getHomepageListingSections(
       listings: accommodation,
     },
     {
-      key: 'recently-added',
-      title: 'Recently Added',
-      subtitle: 'Newly added places and events',
+      key: 'all',
+      title: 'All',
+      subtitle: 'Recently added across every category',
       href: '/',
       listings: recentlyAdded,
     },
@@ -380,4 +400,15 @@ function startOfTodayManila(now = new Date()): Date {
   }).format(now)
 
   return new Date(`${dateKey}T00:00:00+08:00`)
+}
+
+function shuffleListings<T>(items: T[]): T[] {
+  const shuffled = [...items]
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+
+  return shuffled
 }

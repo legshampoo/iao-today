@@ -12,7 +12,7 @@ import type { ListingStatus, ListingWithDetails } from '@/lib/types/listing'
 
 type ListingCardProps = {
   listing: ListingWithDetails
-  variant?: 'standard' | 'featured' | 'compact'
+  variant?: 'standard' | 'featured' | 'compact' | 'horizontal'
   href?: string
   status?: ListingStatus
 }
@@ -81,6 +81,60 @@ export function ListingCard({
   const locationLabel = listingLocationLabel(listing)
   const priceLabel = displayListingPrice(listing)
   const imageClassName = isFeatured ? 'aspect-[4/3]' : isCompact ? 'aspect-[5/3]' : 'aspect-[16/10]'
+
+  if (variant === 'horizontal') {
+    return (
+      <article className="group overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:border-zinc-300 hover:shadow-md">
+        <Link href={href} className="flex items-stretch gap-3">
+          <div className="relative h-24 w-28 shrink-0 overflow-hidden bg-zinc-100 sm:h-28 sm:w-36">
+            {listing.image_url ? (
+              <Image
+                src={listing.image_url}
+                alt={listing.title}
+                fill
+                sizes="144px"
+                className="object-cover transition duration-300 group-hover:scale-105"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 px-2 text-center text-[10px] font-medium uppercase tracking-wide text-zinc-400">
+                {listingTypeLabel(listing.type)}
+              </div>
+            )}
+          </div>
+
+          <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-3">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-400">
+                {listingTypeLabel(listing.type)}
+              </p>
+              {priceLabel && (
+                <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                  {priceLabel}
+                </span>
+              )}
+            </div>
+            <h3 className="mt-0.5 line-clamp-2 text-sm font-semibold tracking-tight text-zinc-950">
+              {listing.title}
+            </h3>
+            <div className="mt-1.5 space-y-1 text-xs text-zinc-500">
+              {metaLabel && (
+                <p className="flex items-center gap-1.5">
+                  <ClockIcon />
+                  <span className="truncate">{metaLabel}</span>
+                </p>
+              )}
+              {locationLabel && (
+                <p className="flex items-center gap-1.5">
+                  <PinIcon />
+                  <span className="truncate">{locationLabel}</span>
+                </p>
+              )}
+            </div>
+          </div>
+        </Link>
+      </article>
+    )
+  }
 
   return (
     <article className="group h-full overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md">

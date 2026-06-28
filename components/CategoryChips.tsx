@@ -8,7 +8,6 @@ type CategoryChip = {
 }
 
 const CATEGORY_CHIPS: CategoryChip[] = [
-  { label: 'All', href: '/', icon: 'All', slug: 'all' },
   { label: 'Top Picks', href: '/#top-picks', icon: 'Hot', slug: 'top-picks' },
   { label: 'Events', href: '/events', icon: 'Cal', slug: 'events' },
   { label: 'Discounts', href: '/discounts', icon: 'Deal', slug: 'discounts' },
@@ -16,6 +15,7 @@ const CATEGORY_CHIPS: CategoryChip[] = [
   { label: 'Restaurants', href: '/restaurants', icon: 'Food', slug: 'restaurants' },
   { label: 'Wellness', href: '/wellness', icon: 'Zen', slug: 'wellness' },
   { label: 'Stay', href: '/stay', icon: 'Home', slug: 'stay' },
+  { label: 'All', href: '/#all', icon: 'All', slug: 'all' },
 ]
 
 type CategoryChipsProps = {

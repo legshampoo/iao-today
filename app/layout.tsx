@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'IAO Today',
+  title: 'Love Siargao',
   description: "What's happening in Siargao, Philippines",
   icons: {
     icon: icon.src,
