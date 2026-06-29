@@ -6,7 +6,7 @@ export default function ToursPage() {
       type="tour"
       activeSlug="tours"
       title="Tours"
-      subtitle="Surf trips, island hopping, adventures, and guided experiences."
+      subtitle="Island hopping, adventures, and guided experiences."
       emptyMessage="No published tours yet."
     />
   )

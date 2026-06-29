@@ -91,22 +91,6 @@ export function Sidebar() {
             WhatsApp Channel
           </a>
         </div>
-
-        <div className="mt-6 border-t border-zinc-200 pt-6">
-          <h3 className="text-sm font-semibold text-zinc-900">
-            Missing something?
-          </h3>
-          <p className="mt-2 text-sm leading-6 text-zinc-600">
-            Know a place, deal, or experience we should feature? Send it to us
-            and we&apos;ll review it for a future update.
-          </p>
-          <a
-            href="mailto:hello@iao.today"
-            className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-white"
-          >
-            Suggest a Listing
-          </a>
-        </div>
       </div>
     </aside>
   )

@@ -5,6 +5,8 @@ export type ListingType =
   | 'restaurant'
   | 'wellness'
   | 'accommodation'
+  | 'surfing'
+  | 'transportation'
 
 export type ListingPriceType =
   | 'free'
@@ -45,6 +47,7 @@ export type Listing = {
   price_label: string | null
   maps_url: string | null
   external_url: string | null
+  instagram_url: string | null
   location_name: string | null
   area: string | null
   latitude: number | null

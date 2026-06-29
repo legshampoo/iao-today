@@ -10,6 +10,8 @@ export const listingTypes = [
   'restaurant',
   'wellness',
   'accommodation',
+  'surfing',
+  'transportation',
 ] as const
 
 export const listingStatuses = ['draft', 'published', 'archived'] as const
@@ -27,6 +29,8 @@ export const listingFormSchema = z
     price_amount_max: z.string().default(''),
     price_unit: z.union([z.enum(priceUnits), z.literal('')]),
     price_display_override: z.string().max(120).default(''),
+    website_url: z.string().url('Enter a valid website URL').optional().or(z.literal('')),
+    instagram_url: z.string().url('Enter a valid Instagram URL').optional().or(z.literal('')),
     maps_url: z.string().url('Enter a valid Google Maps link').optional().or(z.literal('')),
     is_top_pick: z.boolean(),
     is_featured: z.boolean(),
@@ -116,6 +120,8 @@ export function defaultListingFormValues(): ListingFormValues {
     price_amount_max: '',
     price_unit: '',
     price_display_override: '',
+    website_url: '',
+    instagram_url: '',
     maps_url: '',
     is_top_pick: false,
     is_featured: false,
@@ -147,6 +153,8 @@ export function listingToFormValues(listing: ListingWithDetails): ListingFormVal
       listing.price_amount_max != null ? String(listing.price_amount_max) : '',
     price_unit: listing.price_unit ?? '',
     price_display_override: listing.price_label ?? '',
+    website_url: listing.external_url ?? '',
+    instagram_url: listing.instagram_url ?? '',
     maps_url: listing.maps_url ?? '',
     is_top_pick: listing.is_top_pick,
     is_featured: listing.is_featured,
@@ -191,6 +199,8 @@ export function formValuesToListingPayload(
     price_unit:
       values.price_type === 'paid' && values.price_unit ? values.price_unit : null,
     price_label: nullableTrim(values.price_display_override),
+    external_url: nullableTrim(values.website_url),
+    instagram_url: nullableTrim(values.instagram_url),
     maps_url: nullableTrim(values.maps_url),
     is_top_pick: values.is_top_pick,
     is_featured: values.is_featured,

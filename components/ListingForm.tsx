@@ -45,6 +45,8 @@ const categoryLabels: Record<ListingType, string> = {
   restaurant: 'Restaurant',
   wellness: 'Wellness',
   accommodation: 'Accommodation',
+  surfing: 'Surfing',
+  transportation: 'Transportation',
 }
 
 const recurrenceLabels = {
@@ -425,22 +427,50 @@ export function ListingForm({
       </div>
 
       <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-        <h2 className="text-sm font-semibold text-zinc-950">Location</h2>
-        <div className="mt-5">
-          <label htmlFor="maps_url" className={labelClass}>
-            Google Maps Link
-          </label>
-          <input
-            id="maps_url"
-            name="maps_url"
-            type="url"
-            defaultValue={defaults.maps_url}
-            placeholder="https://maps.app.goo.gl/..."
-            className={inputClass}
-          />
-          <p className="mt-2 text-xs text-zinc-500">
-            Paste a Google Maps share link. Visitors will get a &quot;View on map&quot; button.
-          </p>
+        <h2 className="text-sm font-semibold text-zinc-950">Links & Location</h2>
+        <div className="mt-5 space-y-4">
+          <div>
+            <label htmlFor="website_url" className={labelClass}>
+              Website URL
+            </label>
+            <input
+              id="website_url"
+              name="website_url"
+              type="url"
+              defaultValue={defaults.website_url}
+              placeholder="https://example.com"
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="instagram_url" className={labelClass}>
+              Instagram URL
+            </label>
+            <input
+              id="instagram_url"
+              name="instagram_url"
+              type="url"
+              defaultValue={defaults.instagram_url}
+              placeholder="https://instagram.com/..."
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="maps_url" className={labelClass}>
+              Google Maps Link
+            </label>
+            <input
+              id="maps_url"
+              name="maps_url"
+              type="url"
+              defaultValue={defaults.maps_url}
+              placeholder="https://maps.app.goo.gl/..."
+              className={inputClass}
+            />
+            <p className="mt-2 text-xs text-zinc-500">
+              Paste a Google Maps share link. Visitors will get a &quot;View on map&quot; button.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -689,6 +719,8 @@ function valuesFromForm(
     price_amount_max: options.priceAmountMax,
     price_unit: options.priceUnit,
     price_display_override: options.priceDisplayOverride,
+    website_url: value('website_url'),
+    instagram_url: value('instagram_url'),
     maps_url: value('maps_url'),
     is_top_pick: options.isAdmin
       ? formData.has('is_top_pick')

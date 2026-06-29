@@ -12,8 +12,15 @@ const CATEGORY_CHIPS: CategoryChip[] = [
   { label: 'Events', href: '/events', icon: 'Cal', slug: 'events' },
   { label: 'Discounts', href: '/discounts', icon: 'Deal', slug: 'discounts' },
   { label: 'Tours', href: '/tours', icon: 'Sea', slug: 'tours' },
+  { label: 'Surfing', href: '/surfing', icon: 'Wave', slug: 'surfing' },
   { label: 'Restaurants', href: '/restaurants', icon: 'Food', slug: 'restaurants' },
   { label: 'Wellness', href: '/wellness', icon: 'Zen', slug: 'wellness' },
+  {
+    label: 'Transport',
+    href: '/transportation',
+    icon: 'Ride',
+    slug: 'transportation',
+  },
   { label: 'Stay', href: '/stay', icon: 'Home', slug: 'stay' },
   { label: 'All', href: '/#all', icon: 'All', slug: 'all' },
 ]

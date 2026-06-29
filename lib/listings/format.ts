@@ -14,6 +14,8 @@ export const LISTING_TYPE_LABELS: Record<ListingType, string> = {
   restaurant: 'Restaurant',
   wellness: 'Wellness',
   accommodation: 'Accommodation',
+  surfing: 'Surfing',
+  transportation: 'Transportation',
 }
 
 export const LISTING_TYPE_ROUTES: Record<ListingType, string> = {
@@ -23,6 +25,8 @@ export const LISTING_TYPE_ROUTES: Record<ListingType, string> = {
   restaurant: '/restaurants',
   wellness: '/wellness',
   accommodation: '/stay',
+  surfing: '/surfing',
+  transportation: '/transportation',
 }
 
 export function listingHref(listing: Pick<Listing, 'slug'>): string {

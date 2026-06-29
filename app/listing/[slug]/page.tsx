@@ -52,8 +52,21 @@ function formatRecurrenceLabel(rule: string | null | undefined): string {
   }
 }
 
+function formatLinkLabel(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
+
 function detailRows(listing: ListingWithDetails) {
-  const rows: Array<{ icon: React.ReactNode; primary: string; secondary?: string }> = []
+  const rows: Array<{
+    icon: React.ReactNode
+    primary: string
+    secondary?: string
+    href?: string
+  }> = []
   const eventTime = formatListingEventTime(listing.event_details ?? null)
   const location = listingLocationLabel(listing)
 
@@ -67,10 +80,29 @@ function detailRows(listing: ListingWithDetails) {
     })
   }
 
+  if (listing.external_url) {
+    rows.push({
+      icon: eventDetailIcons.globe,
+      primary: 'Website',
+      secondary: formatLinkLabel(listing.external_url),
+      href: listing.external_url,
+    })
+  }
+
+  if (listing.instagram_url) {
+    rows.push({
+      icon: eventDetailIcons.instagram,
+      primary: 'Instagram',
+      secondary: formatLinkLabel(listing.instagram_url),
+      href: listing.instagram_url,
+    })
+  }
+
   if (listing.maps_url) {
     rows.push({
       icon: eventDetailIcons.pin,
       primary: 'View on map',
+      href: listing.maps_url,
     })
   } else if (location) {
     rows.push({
@@ -199,6 +231,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     icon={row.icon}
                     primary={row.primary}
                     secondary={row.secondary}
+                    href={row.href}
                   />
                 ))}
               </div>
@@ -221,15 +254,39 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </div>
             )}
 
-            {listing.maps_url && (
-              <a
-                href={listing.maps_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={buttonClasses({ className: 'mt-8' })}
-              >
-                View on Map
-              </a>
+            {(listing.external_url || listing.instagram_url || listing.maps_url) && (
+              <div className="mt-8 flex flex-wrap gap-3">
+                {listing.external_url && (
+                  <a
+                    href={listing.external_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonClasses({ variant: 'secondary' })}
+                  >
+                    Visit Website
+                  </a>
+                )}
+                {listing.instagram_url && (
+                  <a
+                    href={listing.instagram_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonClasses({ variant: 'secondary' })}
+                  >
+                    Instagram
+                  </a>
+                )}
+                {listing.maps_url && (
+                  <a
+                    href={listing.maps_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonClasses()}
+                  >
+                    View on Map
+                  </a>
+                )}
+              </div>
             )}
           </div>
 

@@ -38,8 +38,8 @@ export default async function Home() {
               What should I do today?
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
-              Fresh picks for events, deals, tours, restaurants, wellness, and
-              places to stay around the island.
+              Fresh picks for events, deals, tours, surfing, restaurants,
+              wellness, transport, and places to stay around the island.
             </p>
           </div>
           <CategoryChips />

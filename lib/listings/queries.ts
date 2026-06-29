@@ -25,8 +25,10 @@ export type ListingSectionKey =
   | 'events'
   | 'discounts'
   | 'tours'
+  | 'surfing'
   | 'restaurants'
   | 'wellness'
+  | 'transportation'
   | 'accommodation'
   | 'all'
 
@@ -244,8 +246,10 @@ export async function getHomepageListingSections(
     events,
     discounts,
     tours,
+    surfing,
     restaurants,
     wellness,
+    transportation,
     accommodation,
     recentlyAdded,
   ] = await Promise.all([
@@ -253,8 +257,10 @@ export async function getHomepageListingSections(
     getTodayEventListings(supabase, { limit }),
     getActiveDiscountListings(supabase, { limit }),
     getPublishedListingsByType(supabase, 'tour', { limit }),
+    getPublishedListingsByType(supabase, 'surfing', { limit }),
     getPublishedListingsByType(supabase, 'restaurant', { limit }),
     getPublishedListingsByType(supabase, 'wellness', { limit }),
+    getPublishedListingsByType(supabase, 'transportation', { limit }),
     getPublishedListingsByType(supabase, 'accommodation', { limit }),
     getRecentlyAddedListings(supabase, { limit }),
   ])
@@ -284,9 +290,16 @@ export async function getHomepageListingSections(
     {
       key: 'tours',
       title: 'Tours',
-      subtitle: 'Surf, island hopping, and more',
+      subtitle: 'Island hopping, adventures, and guided experiences',
       href: '/tours',
       listings: tours,
+    },
+    {
+      key: 'surfing',
+      title: 'Surfing',
+      subtitle: 'Lessons, board rentals, and surf guides',
+      href: '/surfing',
+      listings: surfing,
     },
     {
       key: 'restaurants',
@@ -301,6 +314,13 @@ export async function getHomepageListingSections(
       subtitle: 'Yoga, healing, and breathwork',
       href: '/wellness',
       listings: wellness,
+    },
+    {
+      key: 'transportation',
+      title: 'Transportation',
+      subtitle: 'Scooters, vans, boats, and airport transfers',
+      href: '/transportation',
+      listings: transportation,
     },
     {
       key: 'accommodation',
