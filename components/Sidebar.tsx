@@ -2,6 +2,7 @@ import Image from 'next/image'
 import {
   DEFAULT_LOCATION_LABEL,
   HERO_IMAGE_PATH,
+  SHOW_WHATSAPP_CHANNEL,
   WHATSAPP_CHANNEL_URL,
   WHATSAPP_GROUP_URL,
 } from '@/lib/constants'
@@ -81,15 +82,17 @@ export function Sidebar() {
             <WhatsAppIcon />
             WhatsApp Group
           </a>
-          <a
-            href={WHATSAPP_CHANNEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#20bd5a]"
-          >
-            <WhatsAppIcon />
-            WhatsApp Channel
-          </a>
+          {SHOW_WHATSAPP_CHANNEL && (
+            <a
+              href={WHATSAPP_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#20bd5a]"
+            >
+              <WhatsAppIcon />
+              WhatsApp Channel
+            </a>
+          )}
         </div>
       </div>
     </aside>

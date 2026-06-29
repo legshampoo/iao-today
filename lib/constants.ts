@@ -10,4 +10,7 @@ export const WHATSAPP_GROUP_URL =
 export const WHATSAPP_CHANNEL_URL =
   'https://whatsapp.com/channel/0029VbCqVPqJ3jv1pho3fv0R'
 
+/** Set to true to show the WhatsApp Channel button in the sidebar. */
+export const SHOW_WHATSAPP_CHANNEL = false
+
 export const DEFAULT_LOCATION_LABEL = 'Siargao, Philippines'
