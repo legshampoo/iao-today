@@ -15,8 +15,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Love Siargao',
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
+  title: 'Siargao Now',
   description: "What's happening in Siargao, Philippines",
+  openGraph: {
+    title: 'Siargao Now',
+    description: "What's happening in Siargao, Philippines",
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
   icons: {
     icon: icon.src,
   },

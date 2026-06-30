@@ -32,7 +32,7 @@ export function formatDigestMessage(events: Event[], siteUrl = getSiteUrl()): st
   if (events.length === 0) {
     return truncateForWhatsApp(
       [
-        `🌴 Love Siargao — ${dateLabel}`,
+        `🌴 Siargao Now — ${dateLabel}`,
         '',
         'No events listed for today yet.',
         '',
@@ -51,7 +51,7 @@ export function formatDigestMessage(events: Event[], siteUrl = getSiteUrl()): st
 
   return truncateForWhatsApp(
     [
-      `🌴 Love Siargao — ${dateLabel}`,
+      `🌴 Siargao Now — ${dateLabel}`,
       '',
       ...lines,
       '',

@@ -37,7 +37,7 @@ export function Footer() {
       </div>
       <div className="border-t border-zinc-200">
         <p className="mx-auto max-w-6xl px-4 py-4 text-center text-xs text-zinc-500">
-          © 2026 Love Siargao. All rights reserved.
+          © 2026 Siargao Now. All rights reserved.
         </p>
       </div>
     </footer>

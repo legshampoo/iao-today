@@ -17,7 +17,7 @@ export default async function AdminListingsPage() {
   return (
     <AdminShell
       title="Listings"
-      subtitle="Create, edit, publish, and archive everything shown on Love Siargao."
+      subtitle="Create, edit, publish, and archive everything shown on Siargao Now."
       action={
         <Link href="/admin/listings/new" className={buttonClasses()}>
           New Listing

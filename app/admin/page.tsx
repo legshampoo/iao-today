@@ -16,7 +16,7 @@ export default async function AdminPage() {
   return (
     <AdminShell
       title="Admin"
-      subtitle={user?.email ? `Signed in as ${user.email}` : 'Manage Love Siargao listings'}
+      subtitle={user?.email ? `Signed in as ${user.email}` : 'Manage Siargao Now listings'}
       action={
         <Link
           href="/admin/listings/new"

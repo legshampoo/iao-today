@@ -82,8 +82,8 @@ export async function POST(request: Request) {
   const { error: resendError } = await resend.emails.send({
     from: fromEmail,
     to: [email],
-    subject: 'Confirm your Love Siargao account',
-    text: `Welcome to Love Siargao!\n\nConfirm your account to get started:\n\n${confirmUrl}\n\nIf you did not create this account, you can ignore this email.`,
+    subject: 'Confirm your Siargao Now account',
+    text: `Welcome to Siargao Now!\n\nConfirm your account to get started:\n\n${confirmUrl}\n\nIf you did not create this account, you can ignore this email.`,
   })
 
   if (resendError) {

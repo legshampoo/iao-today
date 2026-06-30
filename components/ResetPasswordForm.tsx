@@ -65,7 +65,7 @@ export function ResetPasswordForm({ hasSession }: ResetPasswordFormProps) {
         Choose a new password
       </h1>
       <p className="mt-1 text-sm text-zinc-500">
-        Enter a new password for your Love Siargao account.
+        Enter a new password for your Siargao Now account.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">

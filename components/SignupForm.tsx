@@ -42,7 +42,7 @@ export function SignupForm() {
         Create account
       </h1>
       <p className="mt-1 text-sm text-zinc-500">
-        Sign up to create and manage your own Love Siargao listings.
+        Sign up to create and manage your own Siargao Now listings.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">

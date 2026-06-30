@@ -6,7 +6,7 @@ const MANILA_TZ = 'Asia/Manila'
 export function buildClassificationPrompt(post: InstagramPostRow): string {
   const postedAt = post.post_timestamp ?? post.scraped_at
 
-  return `You classify Instagram posts for Love Siargao, a Siargao events board.
+  return `You classify Instagram posts for Siargao Now, a Siargao events board.
 
 Account: @${post.account_username}
 Posted at: ${postedAt} (${MANILA_TZ})
@@ -33,7 +33,7 @@ export function buildExtractionPrompt(post: InstagramPostRow): string {
   const postedAt = post.post_timestamp ?? post.scraped_at
   const { dateKey, weekday, time } = formatManilaContext()
 
-  return `Extract structured event data for Love Siargao from this Instagram post.
+  return `Extract structured event data for Siargao Now from this Instagram post.
 
 Account: @${post.account_username}
 Posted at: ${postedAt}
