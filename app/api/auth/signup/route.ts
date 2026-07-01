@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
+import { getAuthCallbackUrl } from '@/lib/auth/site-url'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 type SignupPayload = {
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
     email,
     password,
     options: {
-      redirectTo: `${origin}/auth/callback?next=/`,
+      redirectTo: getAuthCallbackUrl('/', origin),
     },
   })
 

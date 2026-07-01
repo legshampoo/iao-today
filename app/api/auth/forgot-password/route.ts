@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
+import { getAuthCallbackUrl } from '@/lib/auth/site-url'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 type ForgotPasswordPayload = {
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
     type: 'recovery',
     email,
     options: {
-      redirectTo: `${origin}/auth/callback?next=/reset-password`,
+      redirectTo: getAuthCallbackUrl('/reset-password', origin),
     },
   })
 

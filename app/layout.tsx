@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import { AuthHashHandler } from '@/components/AuthHashHandler'
 import { Footer } from '@/components/Footer'
 import icon from './icon.png'
 import './globals.css'
@@ -44,6 +45,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col">
+        <AuthHashHandler />
         <div className="flex-1">{children}</div>
         <Footer />
       </body>

@@ -33,7 +33,7 @@ export function SignupForm() {
 
     setEmail('')
     setPassword('')
-    setMessage('Account created. Check your email to confirm your account, then sign in.')
+    setMessage('Account created. Check your email and click the link to finish signing in.')
   }
 
   return (
