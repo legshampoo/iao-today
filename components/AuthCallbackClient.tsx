@@ -81,6 +81,16 @@ export function AuthCallbackClient() {
         }
       }
 
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!cancelled && session) {
+        router.replace(next)
+        router.refresh()
+        return
+      }
+
       if (!cancelled) {
         setMessage('Could not sign you in. Redirecting to login...')
         router.replace('/login?error=auth')

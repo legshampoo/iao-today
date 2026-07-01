@@ -16,7 +16,7 @@ export function resolvePublicSiteUrl(requestOrigin?: string) {
   throw new Error('NEXT_PUBLIC_SITE_URL is required for auth email links.')
 }
 
-export function getAuthCallbackUrl(next = '/', requestOrigin?: string) {
+export function getAuthCallbackUrl(next = '/dashboard', requestOrigin?: string) {
   const safeNext = next.startsWith('/') ? next : '/'
   const base = resolvePublicSiteUrl(requestOrigin)
 

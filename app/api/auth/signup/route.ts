@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     email,
     password,
     options: {
-      redirectTo: getAuthCallbackUrl('/', origin),
+      redirectTo: getAuthCallbackUrl('/dashboard', origin),
     },
   })
 

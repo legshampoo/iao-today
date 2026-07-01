@@ -24,6 +24,10 @@ export function AuthHashHandler() {
   const router = useRouter()
 
   useEffect(() => {
+    if (window.location.pathname.startsWith('/auth/callback')) {
+      return
+    }
+
     const tokens = getTokensFromHash()
 
     if (!tokens) {
@@ -38,8 +42,11 @@ export function AuthHashHandler() {
         return
       }
 
-      const cleanUrl = `${window.location.pathname}${window.location.search}`
-      window.history.replaceState(null, '', cleanUrl)
+      const next = new URLSearchParams(window.location.search).get('next')
+      const destination =
+        next && next.startsWith('/') ? next : '/dashboard'
+
+      router.replace(destination)
       router.refresh()
     })
   }, [router])
