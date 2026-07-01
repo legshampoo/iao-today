@@ -10,7 +10,7 @@ import {
 import type { InstagramPostRow } from '@/lib/instagram/types'
 
 export type ProcessPostResult =
-  | { ok: true; status: 'processed'; eventIds: string[]; postId: string }
+  | { ok: true; status: 'processed'; listingIds: string[]; postId: string }
   | { ok: true; status: 'skipped'; postId: string; reason: string }
   | { ok: true; status: 'already_processed'; postId: string }
   | { ok: false; postId: string; error: string }
@@ -71,20 +71,20 @@ export async function processInstagramPost(
       }
     }
 
-    if (!result.eventIds || result.eventIds.length === 0) {
-      throw new Error('Processing finished without creating any events.')
+    if (!result.listingIds || result.listingIds.length === 0) {
+      throw new Error('Processing finished without creating any listings.')
     }
 
-    await markPostProcessed(postId, result.eventIds[0], {
+    await markPostProcessed(postId, result.listingIds[0], {
       ...result.llmResult,
-      eventIds: result.eventIds,
+      listingIds: result.listingIds,
     })
 
     return {
       ok: true,
       status: 'processed',
       postId,
-      eventIds: result.eventIds,
+      listingIds: result.listingIds,
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'

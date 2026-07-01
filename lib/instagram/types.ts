@@ -87,7 +87,7 @@ export type InstagramPostRow = {
     | 'processed'
     | 'skipped'
     | 'failed'
-  event_id: string | null
+  listing_id: string | null
   llm_result: Record<string, unknown> | null
   error_message: string | null
   processed_at: string | null
@@ -98,7 +98,7 @@ export type ProcessingGraphState = {
   classification: ClassificationResult | null
   extractedEvents: ExtractedEventFields[] | null
   skipReason: string | null
-  eventIds: string[]
+  listingIds: string[]
   llmResult: Record<string, unknown>
   error: string | null
 }

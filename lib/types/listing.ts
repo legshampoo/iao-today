@@ -29,6 +29,7 @@ export type ListingPriceUnit =
   | 'starting'
 
 export type ListingStatus = 'draft' | 'published' | 'archived'
+export type ListingSource = 'manual' | 'instagram'
 
 export type Listing = {
   id: string
@@ -37,6 +38,9 @@ export type Listing = {
   slug: string
   type: ListingType
   status: ListingStatus
+  source: ListingSource
+  source_key: string | null
+  source_url: string | null
   description: string | null
   image_url: string | null
   price_type: ListingPriceType

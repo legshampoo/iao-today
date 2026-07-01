@@ -1,7 +1,7 @@
 import { getWhatsAppConfig } from '@/lib/whatsapp/config'
 import { recordDigestLog } from '@/lib/whatsapp/digest-log'
 import { formatDigestMessage } from '@/lib/whatsapp/format-digest'
-import { getEventsForDigest } from '@/lib/whatsapp/get-events-for-digest'
+import { getListingsForDigest } from '@/lib/whatsapp/get-listings-for-digest'
 import { sendChannelPost } from '@/lib/whatsapp/send-channel-post'
 
 export type DigestResult =
@@ -26,15 +26,15 @@ export async function runDigest(options: {
   const config = getWhatsAppConfig()
 
   try {
-    const { dateKey, events } = await getEventsForDigest()
-    const message = formatDigestMessage(events, config.siteUrl)
+    const { dateKey, listings } = await getListingsForDigest()
+    const message = formatDigestMessage(listings, config.siteUrl)
 
     if (options.preview) {
       return {
         ok: true,
         preview: true,
         dateKey,
-        eventCount: events.length,
+        eventCount: listings.length,
         message,
         digestEnabled: config.digestEnabled,
         dryRun: config.dryRun,
@@ -47,7 +47,7 @@ export async function runDigest(options: {
         skipped: true,
         reason: 'digestEnabled is false in lib/whatsapp/whapi.config.ts',
         dateKey,
-        eventCount: events.length,
+        eventCount: listings.length,
       }
     }
 
@@ -62,7 +62,7 @@ export async function runDigest(options: {
     return {
       ok: true,
       dateKey,
-      eventCount: events.length,
+      eventCount: listings.length,
       mode: result.mode,
       messageId: result.messageId,
     }
@@ -70,7 +70,7 @@ export async function runDigest(options: {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
     try {
-      const { dateKey } = await getEventsForDigest()
+      const { dateKey } = await getListingsForDigest()
       await recordDigestLog({
         digestDate: dateKey,
         status: 'failed',

@@ -70,7 +70,8 @@ export function Sidebar() {
       <div className="rounded-2xl border border-zinc-200 bg-white p-4">
         <h2 className="text-sm font-semibold text-zinc-900">Daily Feed</h2>
         <p className="mt-2 text-sm leading-6 text-zinc-600">
-          Your daily guide to the best events, places, and deals in Siargao.
+          Your daily guide to the best events, places, and deals in Siargao. No
+          spam. No chat. Only the best events delivered daily to your inbox.
         </p>
         <div className="mt-4 space-y-3">
           <a

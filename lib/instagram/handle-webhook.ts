@@ -45,7 +45,7 @@ function triggerAsyncProcessing(
         await recordAccountBatchResult(batchId, username, {
           postsScraped,
           postsProcessed: 0,
-          eventsCreated: 0,
+          listingsCreated: 0,
           skipped: 0,
           failed: 0,
           alreadyProcessed: 0,
@@ -78,7 +78,7 @@ async function recordScrapeFailure(
   const result: AccountBatchResult = {
     postsScraped: 0,
     postsProcessed: 0,
-    eventsCreated: 0,
+    listingsCreated: 0,
     skipped: 0,
     failed: 0,
     alreadyProcessed: 0,

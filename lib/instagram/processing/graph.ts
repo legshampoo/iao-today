@@ -1,5 +1,6 @@
 import { Annotation, END, START, StateGraph } from '@langchain/langgraph'
 import { parseManilaDateTime } from '@/lib/datetime/manila'
+import { upsertInstagramEventListing } from '@/lib/listings/upsert-from-instagram'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type {
   InstagramPostRow,
@@ -37,7 +38,7 @@ const GraphState = Annotation.Root({
     reducer: (_, value) => value,
     default: () => null,
   }),
-  eventIds: Annotation<ProcessingGraphState['eventIds']>({
+  listingIds: Annotation<ProcessingGraphState['listingIds']>({
     reducer: (_, value) => value,
     default: () => [],
   }),
@@ -152,62 +153,32 @@ async function saveNode(state: typeof GraphState.State) {
     )
   }
 
-  const eventIds: string[] = []
+  const listingIds: string[] = []
 
   for (const extracted of state.extractedEvents) {
     const startsAt = parseManilaDateTime(
       extracted.starts_at,
       extracted.time_tbc
     )
-    const endsAt = extracted.ends_at
-      ? parseManilaDateTime(extracted.ends_at, false)
-      : null
-    const instagramPostKey = buildInstagramEventKey(
+    const sourceKey = buildInstagramEventKey(
       state.post.post_id,
       startsAt,
       extracted.title
     )
 
-    const { data: existingEvent } = await supabase
-      .from('events')
-      .select('id')
-      .eq('instagram_post_id', instagramPostKey)
-      .maybeSingle()
+    const listingId = await upsertInstagramEventListing(supabase, {
+      extracted,
+      sourceKey,
+      sourceUrl: state.post.post_url,
+      imageUrl,
+    })
 
-    if (existingEvent) {
-      eventIds.push(existingEvent.id)
-      continue
-    }
-
-    const { data: event, error } = await supabase
-      .from('events')
-      .insert({
-        user_id: null,
-        source: 'instagram',
-        instagram_post_id: instagramPostKey,
-        title: extracted.title.trim(),
-        description: extracted.description.trim(),
-        location: extracted.location.trim(),
-        starts_at: startsAt.toISOString(),
-        ends_at: endsAt ? endsAt.toISOString() : null,
-        time_tbc: extracted.time_tbc,
-        is_free: extracted.is_free,
-        price_php: extracted.is_free ? null : extracted.price_php,
-        image_url: imageUrl,
-      })
-      .select('id')
-      .single()
-
-    if (error) {
-      throw new Error(`Failed to create event: ${error.message}`)
-    }
-
-    eventIds.push(event.id)
+    listingIds.push(listingId)
   }
 
   return {
-    eventIds,
-    llmResult: { eventIds, imageUrl },
+    listingIds,
+    llmResult: { listingIds, imageUrl },
   }
 }
 

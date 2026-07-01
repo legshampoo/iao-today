@@ -10,6 +10,7 @@
     "instagram:reset": "node scripts/instagram-reset.mjs",
     "instagram:process": "node scripts/instagram-process.mjs",
     "ngrok": "ngrok http 3000",
+    "clean:next": "rm -rf .next",
     "dev": "pnpm migrate && next dev",
     "build": "pnpm migrate && next build",
     "start": "pnpm migrate && next start",

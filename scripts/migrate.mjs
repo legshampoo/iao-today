@@ -58,6 +58,11 @@ async function ensureMigrationsTable(client) {
       applied_at timestamptz not null default now()
     );
   `)
+
+  await client.query(`
+    alter table ${MIGRATIONS_TABLE} enable row level security;
+    revoke all on ${MIGRATIONS_TABLE} from anon, authenticated, public;
+  `)
 }
 
 async function getAppliedMigrations(client) {

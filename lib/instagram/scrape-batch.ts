@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 export type AccountBatchResult = {
   postsScraped: number
   postsProcessed: number
-  eventsCreated: number
+  listingsCreated: number
   skipped: number
   failed: number
   alreadyProcessed: number
@@ -35,7 +35,7 @@ function formatAccountBatchDetail(result: AccountBatchResult): string {
     return `could not start — ${result.error ?? 'unknown error'}`
   }
 
-  const parts = [`${result.eventsCreated} event(s) created`]
+  const parts = [`${result.listingsCreated} listing(s) created`]
 
   if (result.skipped > 0) {
     parts.push(`${result.skipped} skipped`)
@@ -131,12 +131,12 @@ async function finalizeScrapeBatch(
 ) {
   const supabase = createAdminClient()
 
-  const accountsWithEvents = accountUsernames.filter(
-    (username) => (accountResults[username]?.eventsCreated ?? 0) > 0
+  const accountsWithListings = accountUsernames.filter(
+    (username) => (accountResults[username]?.listingsCreated ?? 0) > 0
   )
 
-  const totalEventsCreated = accountUsernames.reduce(
-    (sum, username) => sum + (accountResults[username]?.eventsCreated ?? 0),
+  const totalListingsCreated = accountUsernames.reduce(
+    (sum, username) => sum + (accountResults[username]?.listingsCreated ?? 0),
     0
   )
 
@@ -147,7 +147,7 @@ async function finalizeScrapeBatch(
         username,
         {
           postsScraped: result?.postsScraped ?? 0,
-          eventsCreated: result?.eventsCreated ?? 0,
+          listingsCreated: result?.listingsCreated ?? 0,
           skipped: result?.skipped ?? 0,
           failed: result?.failed ?? 0,
           scrapeFailed: result?.scrapeFailed ?? false,
@@ -164,8 +164,8 @@ async function finalizeScrapeBatch(
   logInstagramSummary({
     batchId,
     accountsChecked: accountUsernames.length,
-    eventsCreated: totalEventsCreated,
-    accountsWithEvents,
+    listingsCreated: totalListingsCreated,
+    accountsWithListings,
     accounts: perAccount,
   })
 }

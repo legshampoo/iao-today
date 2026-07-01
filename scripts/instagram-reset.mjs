@@ -88,17 +88,17 @@ async function resetInstagramData() {
   await client.connect()
 
   try {
-    const { rowCount: deletedEvents } = await client.query(
-      `delete from public.events where source = 'instagram'`
+    const { rowCount: deletedListings } = await client.query(
+      `delete from public.listings where source = 'instagram'`
     )
 
     const { rowCount: deletedPosts } = await client.query(
       `delete from public.instagram_posts`
     )
 
-    console.log(`[instagram-reset] Deleted ${deletedEvents ?? 0} instagram event(s)`)
+    console.log(`[instagram-reset] Deleted ${deletedListings ?? 0} instagram listing(s)`)
     console.log(`[instagram-reset] Deleted ${deletedPosts ?? 0} instagram post record(s)`)
-    console.log('[instagram-reset] Manual events were not touched.')
+    console.log('[instagram-reset] Manual listings were not touched.')
   } finally {
     await client.end()
   }

@@ -4,7 +4,7 @@ import type { AccountBatchResult } from '@/lib/instagram/scrape-batch'
 export function summarizeProcessResults(
   results: ProcessPostResult[]
 ): Omit<AccountBatchResult, 'postsScraped'> {
-  let eventsCreated = 0
+  let listingsCreated = 0
   let skipped = 0
   let failed = 0
   let alreadyProcessed = 0
@@ -17,7 +17,7 @@ export function summarizeProcessResults(
 
     switch (result.status) {
       case 'processed':
-        eventsCreated += result.eventIds.length
+        listingsCreated += result.listingIds.length
         break
       case 'skipped':
         skipped += 1
@@ -30,7 +30,7 @@ export function summarizeProcessResults(
 
   return {
     postsProcessed: results.length,
-    eventsCreated,
+    listingsCreated,
     skipped,
     failed,
     alreadyProcessed,

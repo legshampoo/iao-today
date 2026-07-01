@@ -119,7 +119,7 @@ export async function markPostSkipped(
 
 export async function markPostProcessed(
   postId: string,
-  eventId: string,
+  listingId: string,
   llmResult: Record<string, unknown>
 ) {
   const supabase = createAdminClient()
@@ -128,7 +128,7 @@ export async function markPostProcessed(
     .from('instagram_posts')
     .update({
       processing_status: 'processed',
-      event_id: eventId,
+      listing_id: listingId,
       llm_result: llmResult,
       processed_at: new Date().toISOString(),
       error_message: null,

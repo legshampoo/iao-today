@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
-const BUCKET = 'event-images'
+const BUCKET = 'listing-images'
 const MAX_SIZE_BYTES = 5 * 1024 * 1024
 
 const EXTENSIONS: Record<string, string> = {

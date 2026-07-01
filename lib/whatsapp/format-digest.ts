@@ -1,6 +1,12 @@
 import { WHATSAPP_CHANNEL_URL } from '@/lib/constants'
-import { formatEventPrice, formatEventTime, formatTodayInManila } from '@/lib/format'
-import type { Event } from '@/lib/types/event'
+import { formatTodayInManila } from '@/lib/format'
+import {
+  formatListingEventTime,
+  listingHref,
+  listingLocationLabel,
+} from '@/lib/listings/format'
+import { displayListingPrice } from '@/lib/listings/price'
+import type { ListingWithDetails } from '@/lib/types/listing'
 import { getSiteUrl } from '@/lib/whatsapp/config'
 
 const WHATSAPP_TEXT_LIMIT = 4096
@@ -13,31 +19,42 @@ function truncateForWhatsApp(text: string): string {
   return `${text.slice(0, WHATSAPP_TEXT_LIMIT - 1)}…`
 }
 
-function formatEventLine(event: Event, index: number, siteUrl: string): string {
-  const priceLabel = formatEventPrice(event.is_free, event.price_php)
-  const timeLabel = event.time_tbc ? 'Time TBC' : formatEventTime(event.starts_at)
-  const eventUrl = `${siteUrl}/events/${event.id}`
-  const details = [timeLabel, event.location, priceLabel].filter(Boolean)
+function formatListingLine(
+  listing: ListingWithDetails,
+  index: number,
+  siteUrl: string
+): string {
+  const priceLabel = displayListingPrice(listing)
+  const timeLabel =
+    listing.event_details?.time_label === 'Time TBC'
+      ? 'Time TBC'
+      : formatListingEventTime(listing.event_details ?? null)
+  const locationLabel = listingLocationLabel(listing)
+  const listingUrl = `${siteUrl}${listingHref(listing)}`
+  const details = [timeLabel, locationLabel, priceLabel].filter(Boolean)
 
   return [
-    `${index}. ${event.title}`,
+    `${index}. ${listing.title}`,
     `   ${details.join(' · ')}`,
-    `   ${eventUrl}`,
+    `   ${listingUrl}`,
   ].join('\n')
 }
 
-export function formatDigestMessage(events: Event[], siteUrl = getSiteUrl()): string {
+export function formatDigestMessage(
+  listings: ListingWithDetails[],
+  siteUrl = getSiteUrl()
+): string {
   const dateLabel = formatTodayInManila()
 
-  if (events.length === 0) {
+  if (listings.length === 0) {
     return truncateForWhatsApp(
       [
         `🌴 Siargao Now — ${dateLabel}`,
         '',
         'No events listed for today yet.',
         '',
-        'Be the first — add yours and help the community discover what\'s on:',
-        `${siteUrl}/dashboard/events/new`,
+        "Be the first — add yours and help the community discover what's on:",
+        `${siteUrl}/dashboard/listings/new`,
         '',
         `More events: ${siteUrl}`,
         `Follow the channel: ${WHATSAPP_CHANNEL_URL}`,
@@ -45,8 +62,8 @@ export function formatDigestMessage(events: Event[], siteUrl = getSiteUrl()): st
     )
   }
 
-  const lines = events.map((event, index) =>
-    formatEventLine(event, index + 1, siteUrl)
+  const lines = listings.map((listing, index) =>
+    formatListingLine(listing, index + 1, siteUrl)
   )
 
   return truncateForWhatsApp(

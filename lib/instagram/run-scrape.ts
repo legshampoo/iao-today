@@ -51,8 +51,8 @@ export async function runInstagramScrape(): Promise<ScrapeTriggerResult> {
     if (accounts.length === 0) {
       logInstagramSummary({
         accountsChecked: 0,
-        eventsCreated: 0,
-        accountsWithEvents: [],
+        listingsCreated: 0,
+        accountsWithListings: [],
         accounts: {},
       })
 
@@ -95,7 +95,7 @@ export async function runInstagramScrape(): Promise<ScrapeTriggerResult> {
         await recordAccountBatchResult(batchId, account.username, {
           postsScraped: 0,
           postsProcessed: 0,
-          eventsCreated: 0,
+          listingsCreated: 0,
           skipped: 0,
           failed: 0,
           alreadyProcessed: 0,
